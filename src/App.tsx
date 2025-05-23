@@ -31,6 +31,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { Navigation } from './components/Navigation';
 import { Chatbot } from './components/chatbot/Chatbot';
 import { Footer } from './components/Footer';
+import Navbar from './components/navbar';
 
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => {
                   <BrowserRouter>
                    <AuthProvider>
                         <Navigation />
+                        <Navbar/>
                         <Routes>
                           <Route path="/login" element={<Login />} />
                           <Route path="/registerform" element={<RegistrationForm />} />
