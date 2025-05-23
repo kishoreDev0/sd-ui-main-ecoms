@@ -1,5 +1,5 @@
 
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/navbar/Navigation";
 import { Footer } from "@/components/Footer";
 import { Chatbot } from "@/components/chatbot/Chatbot";
 import { OrderConfirmPopup } from "@/components/OrderConfirmPopup";
@@ -26,7 +26,6 @@ const CartPage = () => {
   
   return (
     <>
-      <Navigation />
       <OrderConfirmPopup />
       
       <div className="container mx-auto px-4 py-8">
@@ -186,8 +185,6 @@ const CartPage = () => {
         )}
       </div>
       
-      <Footer />
-      <Chatbot />
     </>
   );
 };

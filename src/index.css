@@ -127,3 +127,5 @@ h2{font-weight: 400!important;}
 .caroudiv{position: relative;}
 .cprev{position: absolute; top: 50%; left: 2%; transform: translateY(-50%);}
 .cnext{position: absolute; top: 50%; right: 2%; transform: translateY(-50%);}
+.dashmain{width: 97%;margin: 0 auto; padding-top: 2%;}
+.w-10{width: 10%;}
