@@ -1,4 +1,5 @@
 export interface User {
+  id:number
   userId: number;
   roleId: number | null;
   username: string;

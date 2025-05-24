@@ -10,7 +10,7 @@ export class FeatureAPI {
     axiosInstance.get(`${ApiVersions.V1}${Feature.FEATURES}`);
 
   updateFeature = async (id: number, payload: UpdateFeaturePayload) =>
-    axiosInstance.put(`${ApiVersions.V1}${Feature.FEATURES}/${id}`, payload);
+    axiosInstance.patch(`${ApiVersions.V1}${Feature.FEATURES}/${id}`, payload);
 
   deleteFeature = async (id: number) =>
     axiosInstance.delete(`${ApiVersions.V1}${Feature.FEATURES}/${id}`);

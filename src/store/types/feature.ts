@@ -19,6 +19,7 @@ export interface CreateFeaturePayload {
   createdBy: number;
 }
 
-export interface UpdateFeaturePayload extends CreateFeaturePayload {
-  id: number;
+export interface UpdateFeaturePayload {
+ name: string;
+  updatedBy: number;
 }

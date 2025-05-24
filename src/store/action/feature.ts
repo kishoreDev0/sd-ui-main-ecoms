@@ -12,12 +12,7 @@ export const createFeature = createAsyncThunk(
       const response = await featureAPI.createFeature(featureData);
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue({
-          message: error.response?.data?.message || 'Failed to create feature',
-          status: error.response?.status,
-        });
-      }
+      
       return rejectWithValue('Unexpected error occurred while creating the feature');
     }
   }
@@ -30,12 +25,7 @@ export const fetchAllFeatures = createAsyncThunk(
       const response = await featureAPI.fetchAllFeatures();
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue({
-          message: error.response?.data?.message || 'Failed to fetch features',
-          status: error.response?.status,
-        });
-      }
+      
       return rejectWithValue('Unexpected error occurred while fetching features');
     }
   }

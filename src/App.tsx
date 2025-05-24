@@ -133,7 +133,8 @@ import { WishlistProvider } from './context/WishlistContext';
 import { ShoppingCartProvider } from './context/ShoppingCartContext';
 import { TooltipProvider } from './components/ui/tooltip';
 import  {ProductsList}  from './components/admin/Products/ProductsList';
-import { RootState } from './store/reducer';
+import  {ToastContainer}  from 'react-toastify';
+
 // Component to wrap routes and apply conditional layout
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -162,6 +163,7 @@ const App = () => {
               <ChatbotProvider>
                 <BrowserRouter>
                   <AuthProvider>
+                    <ToastContainer/>
                     <LayoutWrapper>
                       <Routes>
                         {/* Admin routes */}
