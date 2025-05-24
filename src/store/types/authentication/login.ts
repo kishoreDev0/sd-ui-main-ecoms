@@ -1,10 +1,11 @@
 export interface User {
+  id:number
   userId: number;
   roleId: number | null;
   username: string;
   email: string;
   profileUrl: string | null;
-  accessToken: string;
+  
 }
 
 export interface AuthState {
@@ -12,9 +13,14 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  isAdmin:boolean;
+  token:string
 }
 
 export interface LoginResponse {
+  user: any;
+  session: string;
+  statusCode: string;
   status: string;
   message: string;
   data: User;

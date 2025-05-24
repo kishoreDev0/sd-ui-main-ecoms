@@ -5,6 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { ShoppingBag, Eye, EyeOff } from 'lucide-react';
+import { loginUser } from '@/store/action/authentication/login';
+import { initializeHttpClient } from '@/axios-setup/axios-interceptor';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+
 
 
 export const AdminLogin: React.FC = () => {
@@ -12,10 +19,26 @@ export const AdminLogin: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { httpClient } = initializeHttpClient();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+   const result = await dispatch(
+      loginUser({
+        email,
+        password,
+        api: httpClient,
+      })
+    ).unwrap();
+
+     if (result) {
+      toast.success('Login successful!');
+      navigate('/admin/dashboard');
+    } else {
+      toast.error('Login failed. Please check your credentials.');
+    }
     
     // Simulate API call
     setTimeout(() => {
