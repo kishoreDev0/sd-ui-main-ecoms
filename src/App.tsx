@@ -102,7 +102,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from './store';
+import store, { useAppSelector } from './store';
 import './App.css';
 import { AdminHeader } from './components/layouts/AdminHeader';
 import Login from './components/login';
@@ -121,7 +121,7 @@ import ProductDetailPage from './pages/product/ProductDetailPage';
 import ProductsPage from './pages/product/ProductsPage';
 import HomePage from './pages/home/HomePage';
 import { AdminLogin } from './components/admin/Auth/AdminLogin';
-
+import { FeatureList } from './components/admin/feature/FeatureList';
 import { Navigation } from './components/navbar/Navigation';
 import { Footer } from './components/Footer';
 import { Chatbot } from './components/chatbot/Chatbot';
@@ -133,6 +133,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import { ShoppingCartProvider } from './context/ShoppingCartContext';
 import { TooltipProvider } from './components/ui/tooltip';
 import  {ProductsList}  from './components/admin/Products/ProductsList';
+import { RootState } from './store/reducer';
 // Component to wrap routes and apply conditional layout
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -151,6 +152,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 const queryClient = new QueryClient();
 
 const App = () => {
+
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -166,8 +168,8 @@ const App = () => {
                         <Route path="/admin/login" element={<AdminLogin />} />
                         <Route path="/admin/dashboard" element={<DashboardOverview />} />
                         <Route path="/admin/products" element={<ProductsList />} />
-                        {/* <Route path="/admin/dashboard" element={<DashboardOverview />} />
-                        <Route path="/admin/dashboard" element={<DashboardOverview />} />
+                        <Route path="/admin/features" element={<FeatureList />} />
+                         {/*<Route path="/admin/dashboard" element={<DashboardOverview />} />
                         <Route path="/admin/dashboard" element={<DashboardOverview />} /> */}
 
 

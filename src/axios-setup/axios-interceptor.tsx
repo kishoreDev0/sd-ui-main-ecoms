@@ -6,12 +6,16 @@ export interface HttpClientInstance {
 
 export const initializeHttpClient = (): HttpClientInstance => {
   const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('user')
   const httpClient = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: import.meta.env.VITE_BACKEND_URL,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `${token}`,
+      'user-id' : userId,
+      'access-token' : token
+      
     },
   });
 

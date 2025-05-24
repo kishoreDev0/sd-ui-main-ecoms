@@ -24,7 +24,7 @@ export class AuthAPI {
         password,
       });
 
-      return response;
+      return response.data;
     } catch (error) {
       console.error('Login error:', error);
       throw error;

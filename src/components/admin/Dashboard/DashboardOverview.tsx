@@ -83,7 +83,7 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
   };
 
   return (
-    <div className="space-y-6 dashmain animate-fade-in">
+    <div className="space-y-6 dashmain  animate-fade-in">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
           <div key={index} onClick={() => onNavigate(stat.module)} className="cursor-pointer">
@@ -151,6 +151,15 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
             >
               <Heart className="h-6 w-6" />
               <span>Wishlists</span>
+            </Button>
+
+             <Button 
+              className="h-20 flex-col gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200"
+               onClick={() => navigateAlong("features")}
+               data-link='/admin/features'
+            >
+              <ShoppingBag className="h-6 w-6" />
+              <span>Add Feature</span>
             </Button>
           </div>
         </Card>

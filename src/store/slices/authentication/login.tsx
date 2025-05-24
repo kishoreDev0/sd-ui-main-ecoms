@@ -16,7 +16,9 @@ const initialState: AuthState = {
   user: storedUser ? JSON.parse(storedUser) : null,
   isAuthenticated: !!isAuthenticated,
   isLoading: false,
+  isAdmin: false,
   error: null,
+  token:''
 };
 
 const authSlice = createSlice({
@@ -27,6 +29,7 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       state.error = null;
+      state.isAdmin = false;
       Object.values(AUTH_STORAGE_KEYS).forEach((key) => {
         localStorage.removeItem(key);
       });
@@ -52,11 +55,15 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(loginUser.fulfilled, (state, action) => {
+        console.log(action.payload)
+        const token = localStorage.getItem('token')
         state.isLoading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
+        state.isAdmin = action.payload.user.role.id === 1;
         state.error = null;
+        state.token = action.payload.session ?? token ?? ''
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
