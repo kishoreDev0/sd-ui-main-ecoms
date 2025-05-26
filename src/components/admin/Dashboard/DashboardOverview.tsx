@@ -161,6 +161,14 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
               <ShoppingBag className="h-6 w-6" />
               <span>Add Feature</span>
             </Button>
+            <Button 
+              className="h-20 flex-col gap-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200"
+              onClick={() => navigateAlong("categories")}
+              data-link='/admin/categories'
+            >
+              <ShoppingCart className="h-6 w-6" />
+              <span>View Categories</span>
+            </Button>
           </div>
         </Card>
       </div>

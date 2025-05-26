@@ -11,13 +11,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
-import { AddFeatureModal } from './AddFeatureModal';
+import { AddCategoryModal } from './AddCategoryModal';
 import { useDispatch } from 'react-redux';
-import { fetchAllFeatures, updateFeature } from '@/store/action/feature';
+import { deleteCategory, fetchAllCategorys, updateCategory } from '@/store/action/category';
 import { AppDispatch, useAppSelector } from '@/store';
 import { RootState } from '@/store/reducer';
 
-// Import Dialog components from shadcn/ui
 import {
   Dialog,
   DialogTrigger,
@@ -29,81 +28,79 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { HttpStatusCode } from '@/constants';
-import ConfirmationDialog from '@/components/confirmation-dialog';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { deleteCategory } from '@/store/action/category';
-import { User } from '@/store/types/authentication/login';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 
-interface Feature {
+interface Category {
   id: number;
-  name: string;
-  productId: number;
-  createdAt: string;
+  categoryName: string;
+  description: string;
+  isActive: boolean;
   createdBy: string;
-  updatedAt: string;
   updatedBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-
-export const FeatureList: React.FC = () => {
+export const CategoryList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { features } = useAppSelector((state: RootState) => state.featureSelector);
-    const { user } = useAppSelector((state: RootState) => state.auth);
-
-
-  const [searchTerm, setSearchTerm] = useState('');
+  const { categories } = useAppSelector((state: RootState) => state.categorySelector);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [deleteCategoryId, setDeleteCategoryId] = useState<number | null>(null);
-  
-  
-
-  // For edit dialog state
+  const [searchTerm, setSearchTerm] = useState('');
   const [editOpen, setEditOpen] = useState(false);
-  const [editFeature, setEditFeature] = useState<Feature | null>(null);
+  const [editCategory, setEditCategory] = useState<Category | null>(null);
   const [editName, setEditName] = useState('');
-
-  const filteredFeatures = features.filter((f: Feature) => {
-    if (f?.name) {
-      return f.name.toLowerCase().includes(searchTerm.toLowerCase());
-    }
-    return false;
-  });
+  const [editDescription, setEditDescription] = useState('');
+  const [editIsActive, setEditIsActive] = useState(true);
+const [deleteCategoryId, setDeleteCategoryId] = useState<number | null>(null);
+  const filteredCategories = categories.filter((cat: Category) =>
+    cat.categoryName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
-    dispatch(fetchAllFeatures());
+    dispatch(fetchAllCategorys());
   }, [dispatch]);
 
-  // Open dialog and set form values
-  const openEditDialog = (feature: Feature) => {
-    setEditFeature(feature);
-    setEditName(feature.name);
+  const openEditDialog = (category: Category) => {
+    setEditCategory(category);
+    setEditName(category.categoryName);
+    setEditDescription(category.description);
+    setEditIsActive(category.isActive);
     setEditOpen(true);
   };
 
-  // Save changes (replace with your update logic)
   const handleSave = async () => {
-    if (!editFeature) return;
+    if (!editCategory) return;
     try {
       const result = await dispatch(
-        updateFeature({
-          id: editFeature.id,
+        updateCategory({
+          id: editCategory.id,
           payload: {
-            name: editName,
-            updatedBy: user?.id ?? 0
+            categoryName: editName,
+            description: editDescription,
+            isActive: editIsActive,
+            updatedBy: user?.id ?? 0,
           },
         })
       ).unwrap();
-      if(result.statusCode === HttpStatusCode.OK){
 
+      if (result.statusCode === HttpStatusCode.OK) {
+        // Optionally show success toast
+        toast.success(result.message || 'Category updated successfully');
+      }
+      else{
+        // Show error toast if the update failed
+        toast.error(result.message || 'Failed to update category');
       }
     } catch (error) {
       console.log(error);
     }
 
     setEditOpen(false);
-    setEditFeature(null);
+    setEditCategory(null);
   };
-
   const handleDelete = async () => {
     if (!deleteCategoryId) return;
 
@@ -112,7 +109,7 @@ export const FeatureList: React.FC = () => {
       if (result.statusCode === HttpStatusCode.OK) {
         console.log("deleted succesfully")
         toast.success(result.message || 'Category deleted successfully');
-        dispatch(fetchAllFeatures())
+        dispatch(fetchAllCategorys())
       } else {
         toast.error(result.message || 'Failed to delete category');
       }
@@ -128,10 +125,10 @@ export const FeatureList: React.FC = () => {
     <div className="space-y-6 dashmain">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Features</h2>
-          <p className="text-gray-500">Manage features for products</p>
+          <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
+          <p className="text-gray-500">Manage product categories</p>
         </div>
-        <AddFeatureModal />
+        <AddCategoryModal />
       </div>
 
       <Card className="p-6">
@@ -139,7 +136,7 @@ export const FeatureList: React.FC = () => {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Search features..."
+              placeholder="Search categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -152,30 +149,23 @@ export const FeatureList: React.FC = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
+                <TableHead>Description</TableHead>
                 <TableHead>Created by</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredFeatures.map((feature: Feature) => (
-                <TableRow key={feature.id}>
-                  <TableCell>{feature.name}</TableCell>
-                  <TableCell>{feature.createdBy?.id}</TableCell>
+              {filteredCategories.map((cat: Category) => (
+                <TableRow key={cat.id}>
+                  <TableCell>{cat.categoryName}</TableCell>
+                  <TableCell>{cat.description}</TableCell>
+                  <TableCell>{cat.createdBy}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openEditDialog(feature)}
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => openEditDialog(cat)}>
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-red-600 hover:text-red-700"
-                        onClick={() => {setConfirmDialogOpen(true);setDeleteCategoryId(feature.id)}}
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => {setConfirmDialogOpen(true);setDeleteCategoryId(cat.id)}} className="text-red-600 hover:text-red-700">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -186,7 +176,7 @@ export const FeatureList: React.FC = () => {
           </Table>
         </div>
       </Card>
-      {/* delete dialog */}
+
       <ConfirmationDialog
         open={confirmDialogOpen}
         onClose={() => setConfirmDialogOpen(false)}
@@ -198,23 +188,42 @@ export const FeatureList: React.FC = () => {
         variant="destructive"
       />
 
-      {/* Edit Feature Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Feature</DialogTitle>
-            <DialogDescription>Update the feature's name below.</DialogDescription>
+            <DialogTitle>Edit Category</DialogTitle>
+            <DialogDescription>Update the category details below.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <label htmlFor="feature-name" className="font-semibold">
+              <label htmlFor="category-name" className="font-semibold">
                 Name
               </label>
               <Input
-                id="feature-name"
+                id="category-name"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
               />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="category-description" className="font-semibold">
+                Description
+              </label>
+              <Input
+                id="category-description"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center space-x-2 pt-2">
+              <Checkbox
+                id="is-active"
+                checked={editIsActive}
+                onCheckedChange={(checked) => setEditIsActive(!!checked)}
+              />
+              <label htmlFor="is-active" className="text-sm font-medium">
+                Active
+              </label>
             </div>
           </div>
           <DialogFooter>

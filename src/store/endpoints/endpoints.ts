@@ -12,3 +12,7 @@ export enum Feature{
     FEATURES = '/features',
     FEATURE = '/feature',
 }
+export enum Category{
+    CATEGORY = '/category',
+    CATEGORYS = '/categories',
+}

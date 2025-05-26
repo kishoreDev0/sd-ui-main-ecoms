@@ -134,6 +134,8 @@ import { ShoppingCartProvider } from './context/ShoppingCartContext';
 import { TooltipProvider } from './components/ui/tooltip';
 import  {ProductsList}  from './components/admin/Products/ProductsList';
 import  {ToastContainer}  from 'react-toastify';
+import AdminRoute from './route/AdminRoute';
+import { CategoryList } from './components/admin/category/CategoryList';
 
 // Component to wrap routes and apply conditional layout
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -168,11 +170,11 @@ const App = () => {
                       <Routes>
                         {/* Admin routes */}
                         <Route path="/admin/login" element={<AdminLogin />} />
-                        <Route path="/admin/dashboard" element={<DashboardOverview />} />
-                        <Route path="/admin/products" element={<ProductsList />} />
-                        <Route path="/admin/features" element={<FeatureList />} />
-                         {/*<Route path="/admin/dashboard" element={<DashboardOverview />} />
-                        <Route path="/admin/dashboard" element={<DashboardOverview />} /> */}
+                        <Route path="/admin/dashboard" element={<AdminRoute element={<DashboardOverview />} />} />
+                        <Route path="/admin/products" element={<AdminRoute element={<ProductsList />} />} />
+                        <Route path="/admin/features" element={<AdminRoute element={<FeatureList />} />} />
+                        <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
+                       
 
 
                         {/* Public/User routes */}
