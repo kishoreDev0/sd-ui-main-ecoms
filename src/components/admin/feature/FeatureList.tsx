@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Search, Plus, Edit, Trash2 } from 'lucide-react';
+import { Search,  Edit, Trash2 } from 'lucide-react';
 import { AddFeatureModal } from './AddFeatureModal';
 import { useDispatch } from 'react-redux';
 import { fetchAllFeatures, updateFeature } from '@/store/action/feature';
@@ -20,7 +20,6 @@ import { RootState } from '@/store/reducer';
 // Import Dialog components from shadcn/ui
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -32,7 +31,6 @@ import { HttpStatusCode } from '@/constants';
 import ConfirmationDialog from '@/components/confirmation-dialog';
 import { toast } from 'sonner';
 import { deleteCategory } from '@/store/action/category';
-import { User } from '@/store/types/authentication/login';
 
 interface Feature {
   id: number;
@@ -80,7 +78,6 @@ export const FeatureList: React.FC = () => {
     setEditOpen(true);
   };
 
-  // Save changes (replace with your update logic)
   const handleSave = async () => {
     if (!editFeature) return;
     try {

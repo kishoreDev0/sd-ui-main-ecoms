@@ -16,7 +16,7 @@ export class ProductAPI {
     axiosInstance.get(`${ApiVersions.V1}${Products.PRODUCTS}/${id}`);
 
   updateProduct = async (id: number, payload: UpdateProductPayload) =>
-    axiosInstance.put(`${ApiVersions.V1}${Products.PRODUCTS}/${id}`, payload);
+    axiosInstance.patch(`${ApiVersions.V1}${Products.PRODUCTS}/${id}`, payload);
 
   deleteProduct = async (id: number) =>
     axiosInstance.delete(`${ApiVersions.V1}${Products.PRODUCTS}/${id}`);

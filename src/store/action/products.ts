@@ -18,14 +18,7 @@ export const createProduct = createAsyncThunk(
       const response = await productAPI.createProduct(productData);
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue({
-          message:
-            error.response?.data?.message || 'Product has not been created',
-          status: error.response?.status,
-          error: error.response?.data,
-        });
-      }
+      
       return rejectWithValue(
         'Unexpected error occurred while creating the product',
       );
@@ -40,13 +33,7 @@ export const fetchAllProducts = createAsyncThunk(
       const response = await productAPI.fetchAllProducts();
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue({
-          message: error.response?.data?.message || 'Failed to fetch products',
-          status: error.response?.status,
-          error: error.response?.data,
-        });
-      }
+     
       return rejectWithValue(
         'Unexpected error occurred while fetching products',
       );
@@ -61,6 +48,7 @@ export const updateProduct = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
+      console.log(id, payload)
       const response = await productAPI.updateProduct(id, payload);
       return response.data;
     } catch (error) {

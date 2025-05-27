@@ -2,9 +2,12 @@ export interface Product {
   id: number;
   name: string;
   description: string;
-  collectionImage: string; // comma-separated URLs or file names
+  images: string[]; 
+  categoryId:number;
+  features:number[];
+  inStock: boolean;
   price: number;
-  stock: number;
+  noOfStock: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -17,11 +20,44 @@ export interface ProductState {
 export interface CreateProductPayload {
   name: string;
   description: string;
-  collectionImage: string;
+  imagesPath: string[]; 
+  categoryId:number;
+  features:number[];
+  inStock: boolean;
   price: number;
-  stock: number;
+  noOfStock: number;
+  createdBy?: number;
 }
 
-export interface UpdateProductPayload extends CreateProductPayload {
+export interface ProductDetails {
   id: number;
+  name: string;
+  description: string;
+  images: string[]; 
+  categoryId:{
+    name: number;
+    id:number
+  };
+  features:number[];
+  inStock: boolean;
+  price: number;
+  noOfStock: number;
+  createdBy: {
+    id:number
+  };
+  updatedBy: {
+    id:number
+  };
+}
+
+export interface UpdateProductPayload {
+  name: string;
+  description: string;
+  imagesPath: string[]; 
+  categoryId:number;
+  features:string[];
+  inStock: boolean;
+  price: number;
+  noOfStock: number;
+  updatedBy?: number;
 }
