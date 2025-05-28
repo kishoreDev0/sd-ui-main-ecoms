@@ -1,9 +1,17 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, ShoppingCart, Heart, Users, TrendingUp, TrendingDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { AppDispatch, useAppSelector } from '@/store';
+import { RootState } from '@/store/reducer';
+import { useDispatch } from 'react-redux';
+import { fetchAllCarts } from '@/store/action/cart';
+import { fetchAllFeatures } from '@/store/action/feature';
+import { fetchAllProducts } from '@/store/action/products';
+import { fetchAllUsers } from '@/store/action/user';
+import { fetchAllWishlists } from '@/store/action/wishlist';
 
 interface StatCardProps {
   title: string;
@@ -42,10 +50,22 @@ interface DashboardOverviewProps {
 }
 
 export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate = () => {} }) => {
+
+  // Global state 
+  const { user } = useAppSelector(((state:RootState) => state.auth));
+  const { products } = useAppSelector(((state:RootState) => state.productSelector));
+  const { carts } = useAppSelector(((state:RootState) => state.cartSelector));
+  const { users } = useAppSelector(((state:RootState) => state.userSelector));
+  const { wishlist } = useAppSelector(((state:RootState) => state.wishlistSelector));
+
+
+
+
+
   const stats = [
     {
       title: 'Total Products',
-      value: '1,234',
+      value: String(products.length),
       change: '+12%',
       icon: ShoppingBag,
       trend: 'up' as const,
@@ -53,7 +73,7 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
     },
     {
       title: 'Active Carts',
-      value: '89',
+      value: String(carts.length),
       change: '+5%',
       icon: ShoppingCart,
       trend: 'up' as const,
@@ -61,7 +81,7 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
     },
     {
       title: 'Wishlist Items',
-      value: '456',
+      value: String(wishlist.length),
       change: '-2%',
       icon: Heart,
       trend: 'down' as const,
@@ -69,7 +89,7 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
     },
     {
       title: 'Total Users',
-      value: '2,567',
+      value: String(users.length),
       change: '+8%',
       icon: Users,
       trend: 'up' as const,
@@ -78,9 +98,17 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
   ];
 
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>()
   const navigateAlong = (link:string) => {
    navigate(`/admin/${link}`);
   };
+  useEffect(()=>{
+      dispatch(fetchAllCarts())
+      dispatch(fetchAllFeatures())
+      dispatch(fetchAllProducts())
+      dispatch(fetchAllUsers())
+      dispatch(fetchAllWishlists())
+  },[dispatch])
 
   return (
     <div className="space-y-6 dashmain  animate-fade-in">

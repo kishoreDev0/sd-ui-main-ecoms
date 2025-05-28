@@ -266,14 +266,12 @@ export const ProductsList: React.FC = () => {
       });
     });
     Promise.all(readers).then(images => {
-      setEditData(prev => prev ? { ...prev, images } : null);
+      setEditData((prev: any) => prev ? { ...prev, images } : null);
     });
   };
 
   const handleSave = () => {
     if (editData) {
-      // Construct payload, mapping categoryId back to category object if needed
-
       const payload = {
         name: editData.name,
         description: editData.description,

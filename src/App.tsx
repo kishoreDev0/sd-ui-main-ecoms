@@ -102,7 +102,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store, { useAppSelector } from './store';
+import store from './store';
 import './App.css';
 import { AdminHeader } from './components/layouts/AdminHeader';
 import Login from './components/login';
@@ -136,6 +136,8 @@ import  {ProductsList}  from './components/admin/Products/ProductsList';
 import  {ToastContainer}  from 'react-toastify';
 import AdminRoute from './route/AdminRoute';
 import { CategoryList } from './components/admin/category/CategoryList';
+import { CartList } from './components/admin/Carts/CartsList';
+import { WishlistList } from './components/admin/Wishlists/WishlistsList';
 
 // Component to wrap routes and apply conditional layout
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -174,6 +176,9 @@ const App = () => {
                         <Route path="/admin/products" element={<AdminRoute element={<ProductsList />} />} />
                         <Route path="/admin/features" element={<AdminRoute element={<FeatureList />} />} />
                         <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
+                        <Route path="/admin/carts" element={<AdminRoute element={<CartList />} />} />
+                        <Route path="/admin/wishlists" element={<AdminRoute element={<WishlistList />} />} />
+
                        
 
 

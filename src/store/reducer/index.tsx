@@ -7,7 +7,10 @@ import inviteUserReducer from '../slices/authentication/inviteUser';
 import registerReducer from '../slices/authentication/registerForm';
 import productReducer from '../slices/product.slice';
 import featureReducer from '../slices/feature.slice'
-import categoryReducer from '../slices/category';
+import categoryReducer from '../slices/category.slice';
+import cartReducer from '../slices/cart.slice';
+import usersReducer from '../slices/user';
+import wishlistReducer from '../slices/wishlist.slice'
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -19,6 +22,9 @@ const rootReducer = combineReducers({
   productSelector:productReducer,
   featureSelector:featureReducer,
   categorySelector:categoryReducer,
+  cartSelector:cartReducer,
+  userSelector:usersReducer,
+  wishlistSelector:wishlistReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
