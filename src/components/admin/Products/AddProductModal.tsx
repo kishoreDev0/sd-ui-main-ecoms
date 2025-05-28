@@ -1,4 +1,284 @@
-import React, { useState } from 'react';
+// import React, { useEffect, useState } from 'react';
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from '@/components/ui/dialog';
+// import { Button } from '@/components/ui/button';
+// import { Input } from '@/components/ui/input';
+// import { Textarea } from '@/components/ui/textarea';
+// import { Plus } from 'lucide-react';
+// import { useDispatch } from 'react-redux';
+// import { createProduct } from '@/store/action/products';
+// import Select from 'react-select'
+// import makeAnimated from 'react-select/animated'
+
+// import {
+//   DndContext,
+//   closestCenter,
+//   PointerSensor,
+//   useSensor,
+//   useSensors,
+// } from '@dnd-kit/core';
+// import {
+//   arrayMove,
+//   SortableContext,
+//   useSortable,
+//   verticalListSortingStrategy,
+// } from '@dnd-kit/sortable';
+// import { CSS } from '@dnd-kit/utilities';
+// import { AppDispatch, useAppSelector } from '@/store';
+// import { fetchAllCategorys } from '@/store/action/category';
+// import { fetchAllFeatures } from '@/store/action/feature';
+
+// export const AddProductModal: React.FC = () => {
+//   const dispatch = useDispatch<AppDispatch>();
+//   const {user } = useAppSelector((state) => state.auth);
+//   const { categories } = useAppSelector((state) => state.categorySelector);
+//   const { features } = useAppSelector((state) => state.featureSelector);
+
+
+
+
+//   // local state for form data
+//   const [ selectedOptions1, setSelectedOptions1] = useState<any>([]);
+
+//   const [formData, setFormData] = useState({
+//     name: '',
+//     description: '',
+//     categoryId: '',
+//     features: '',
+//     price: '',
+//     noOfStock: '',
+//     inStock: true,
+//   });
+
+//   const [images, setImages] = useState<File[]>([]);
+//   const [previews, setPreviews] = useState<string[]>([]);
+//   const animatedComponents = makeAnimated();
+
+
+//   const sensors = useSensors(useSensor(PointerSensor));
+
+//   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const files = e.target.files;
+//     if (files) {
+//       const fileList = Array.from(files);
+//       setImages(fileList);
+//       const previewUrls = fileList.map(file => URL.createObjectURL(file));
+//       setPreviews(previewUrls);
+//     }
+//   };
+
+  
+//   const handleDragEnd = (event: any) => {
+//     const { active, over } = event;
+//     if (active.id !== over?.id) {
+//       const oldIndex = previews.findIndex(p => p === active.id);
+//       const newIndex = previews.findIndex(p => p === over.id);
+
+//       setPreviews(prev => arrayMove(prev, oldIndex, newIndex));
+//       setImages(prev => arrayMove(prev, oldIndex, newIndex));
+//     }
+//   };
+
+//   const convertFilesToBase64 = (files: File[]): Promise<string[]> =>
+//     Promise.all(
+//       files.map(
+//         (file) =>
+//           new Promise<string>((resolve, reject) => {
+//             const reader = new FileReader();
+//             reader.onload = () => resolve(reader.result as string);
+//             reader.onerror = (error) => reject(error);
+//             reader.readAsDataURL(file);
+//           })
+//       )
+//     );
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     try {
+//       const imagesBase64 = await convertFilesToBase64(images);
+//       const data = {
+//         ...formData,
+//         categoryId: Number(formData.categoryId),
+//         price: parseFloat(formData.price),
+//         noOfStock: Number(formData.noOfStock),
+//         features: selectedOptions1.map((option: { value: any; }) => option.value) ?? [],
+//         createdBy: user?.id ?? 0,
+//         images: imagesBase64,
+//       };
+      
+//       dispatch(createProduct({ productData: data }));
+//     } catch (error) {
+//       console.error('Error submitting form:', error);
+//     }
+//   };
+
+//   const handleChange = (
+//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+//   ) => {
+//     const { name, value, type } = e.target;
+//     const checked = type === 'checkbox' && 'checked' in e.target ? (e.target as HTMLInputElement).checked : undefined;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: type === 'checkbox' ? checked : value,
+//     }));
+//   };
+
+//   const handleChangeSelect1 = (selected: any) => {
+//     setSelectedOptions1(selected); 
+//   };
+
+//   const options1 = features?.map((category: { id: any; name: any; }) => ({
+//     value: category.id,
+//     label: category.name,
+//   }));
+  
+
+//   useEffect(() => {
+//     dispatch(fetchAllCategorys());
+//     dispatch(fetchAllFeatures());
+//   }, [dispatch]);
+
+//   return (
+//     <Dialog>
+//       <DialogTrigger asChild>
+//         <Button className="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200">
+//           <Plus className="h-4 w-4 mr-1" />
+//           Add Product
+//         </Button>
+//       </DialogTrigger>
+//       <DialogContent className="max-w-6xl">
+//         <DialogHeader>
+//           <DialogTitle>Add New Product</DialogTitle>
+//         </DialogHeader>
+//         <form onSubmit={handleSubmit} className="space-y-4">
+
+//           <div className="promain">
+//               <div className="prodiv1">
+//                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//             <div>
+//               <label className="block mb-1 text-sm font-medium">Product Name</label>
+//               <Input required name="name" value={formData.name} onChange={handleChange} />
+//             </div>
+//             <div>
+//               <label className="block mb-1 text-sm font-medium">Price</label>
+//               <Input required type="number" step="0.01" name="price" value={formData.price} onChange={handleChange} />
+//             </div>
+//             <div>
+//               <label className="block mb-1 text-sm font-medium">Stock Quantity</label>
+//               <Input required type="number" name="noOfStock" value={formData.noOfStock} onChange={handleChange} />
+//             </div>
+//             <div>
+//               <label className="block mb-1 text-sm font-medium">Category</label>
+//               <select
+//                 name="categoryId"
+//                 value={formData.categoryId}
+//                 onChange={handleChange}
+//                 required
+//                 className="border rounded px-3 py-2 w-full"
+//               >
+//                 <option disabled value=""  selected>Select the category </option>
+//                {
+//                 categories && categories?.map((category) => (
+//                   <option key={category.id} value={category.id}>
+//                     {category.categoryName ?? "Uncategorized"}
+//                   </option>
+//                 ))
+//                }
+//               </select>
+               
+//             </div>
+//             <div className="flex items-center gap-2 mt-6">
+//               <input
+//                 type="checkbox"
+//                 name="inStock"
+//                 checked={formData.inStock}
+//                 onChange={handleChange}
+//                 className="accent-blue-600"
+//               />
+//               <label className="text-sm">In Stock</label>
+//             </div>
+//           </div>
+//           <div>
+//             <label className="block mb-1 text-sm font-medium">Description</label>
+//             <Textarea required name="description" value={formData.description} onChange={handleChange} />
+//           </div>
+//           <div>
+//             <label className="block mb-1 text-sm font-medium">Features (comma separated)</label>
+//             <Select
+//                         closeMenuOnSelect={false}
+//                         components={animatedComponents}
+//                         isMulti
+//                         onChange={handleChangeSelect1}
+//                         styles={{
+//                           control: (baseStyles, _) => ({
+//                             ...baseStyles,  
+//                           }
+//                           ),
+//                         }}
+//                       //  className={styles.formcontrol}
+//                         options={options1}
+//                       />
+//           </div>
+//               </div>
+//               <div className="prodiv2">
+//                   <div>
+//                     <label className="block mb-1 text-sm font-medium">Upload Images</label>
+//                     <Input type="file" multiple accept="image/*" onChange={handleImageChange} />
+//                     {previews.length > 0 && (
+//                       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+//                         <SortableContext items={previews} strategy={verticalListSortingStrategy}>
+//                           <div className="grid grid-cols-3 gap-2 mt-4">
+//                             {previews.map((src, idx) => (
+//                               <SortableImage key={src} id={src} src={src} />
+//                             ))}
+//                           </div>
+//                         </SortableContext>
+//                       </DndContext>
+//                     )}
+//                   </div>
+//               </div>
+//           </div>
+          
+
+         
+          
+//           <div className="flex justify-end">
+//             <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
+//               Submit
+//             </Button>
+//           </div>
+//         </form>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// };
+
+// const SortableImage = ({ id, src }: { id: string; src: string }) => {
+//   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+
+//   const style = {
+//     transform: CSS.Transform.toString(transform),
+//     transition,
+//   };
+
+//   return (
+//     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+//       <img
+//         src={src}
+//         alt="preview"
+//         className="h-24 w-full object-cover rounded-lg border cursor-move"
+//       />
+//     </div>
+//   );
+// };
+
+
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -9,107 +289,336 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Upload } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import {createProduct} from '@/store/action/products';
+import { createProduct } from '@/store/action/products';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { AppDispatch, useAppSelector } from '@/store';
+import { fetchAllCategorys } from '@/store/action/category';
+import { fetchAllFeatures } from '@/store/action/feature';
 
 export const AddProductModal: React.FC = () => {
-  const [images, setImages] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const dispatch = useDispatch();
-  const [formdata, setFormData] = useState({
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useAppSelector((state) => state.auth);
+  const { categories } = useAppSelector((state) => state.categorySelector);
+  const { features } = useAppSelector((state) => state.featureSelector);
+
+  // Form state
+  const [selectedOptions1, setSelectedOptions1] = useState<any[]>([]);
+  const [formData, setFormData] = useState({
     name: '',
     description: '',
-    collectionImage: '',
-    price: 0,
-    stock: 0,
+    categoryId: '',
+    price: '',
+    noOfStock: '',
+    inStock: true,
   });
 
+  // Image files and previews
+  const [images, setImages] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const animatedComponents = makeAnimated();
+
+  // Drag-and-drop sensors
+  const sensors = useSensors(useSensor(PointerSensor));
+
+  // Handle image input change: set files and generate preview URLs
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
       const fileList = Array.from(files);
+
+      // Clean up old previews before setting new ones to avoid memory leaks
+      previews.forEach(url => URL.revokeObjectURL(url));
+
       setImages(fileList);
-      setPreviewUrls(fileList.map(file => URL.createObjectURL(file)));
+      const previewUrls = fileList.map((file) => URL.createObjectURL(file));
+      setPreviews(previewUrls);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle drag end event for image reordering
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (active.id !== over?.id) {
+      const oldIndex = previews.findIndex(p => p === active.id);
+      const newIndex = previews.findIndex(p => p === over.id);
+      setPreviews((prev) => arrayMove(prev, oldIndex, newIndex));
+      setImages((prev) => arrayMove(prev, oldIndex, newIndex));
+    }
+  };
+
+  // Convert File[] to base64 strings array
+  const convertFilesToBase64 = useCallback((files: File[]): Promise<string[]> =>
+    Promise.all(
+      files.map(
+        (file) =>
+          new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+          })
+      )
+    ), []);
+
+  // Form submit handler
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form data:', formdata);
-    console.log('Images:', images);
-    const data = {
-      name: formdata.name,
-      description: formdata.description,
-      collectionImage: images,
-      price: formdata.price,
-      stock: formdata.stock
+    try {
+      const imagesBase64 = await convertFilesToBase64(images);
+      const data = {
+        ...formData,
+        categoryId: Number(formData.categoryId),
+        price: parseFloat(formData.price),
+        noOfStock: Number(formData.noOfStock),
+        features: selectedOptions1.map((option: { value: any }) => option.value) ?? [],
+        createdBy: user?.id ?? 0,
+        imagesPath: imagesBase64,
+        inStock: Boolean(formData.inStock),
+      };
 
-    }
-    try{
-      // dispatch(createProduct({productData:data}))
+      // Dispatch redux action to create product
+      dispatch(createProduct({ productData: data }));
 
-    }catch(error){
-      console.log(error)
+      // Reset form and previews after successful submit
+      setFormData({
+        name: '',
+        description: '',
+        categoryId: '',
+        price: '',
+        noOfStock: '',
+        inStock: true,
+      });
+      setImages([]);
+      previews.forEach(url => URL.revokeObjectURL(url)); // Clean up URLs
+      setPreviews([]);
+      setSelectedOptions1([]);
+    } catch (error) {
+      console.error('Error submitting form:', error);
     }
-    
   };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
+
+  // Handle text input and select changes
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+    const checked = type === 'checkbox' && 'checked' in e.target ? (e.target as HTMLInputElement).checked : undefined;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
     }));
-  }
+  };
+
+  // Handle multi-select change for features
+  const handleChangeSelect1 = (selected: any) => {
+    setSelectedOptions1(selected ?? []);
+  };
+
+  // Map features for react-select options
+  const options1 = features?.map((feature: { id: any; name: any }) => ({
+    value: feature.id,
+    label: feature.name,
+  })) || [];
+
+  // Fetch categories and features on mount
+  useEffect(() => {
+    dispatch(fetchAllCategorys());
+    dispatch(fetchAllFeatures());
+
+    // Clean up URLs on unmount to prevent memory leaks
+    return () => {
+      previews.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [dispatch]);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="  w-10 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200">
-          <Plus className="h-6 w-6" />
-          <span>Add Product</span>
+        <Button className="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200">
+          <Plus className="h-4 w-4 mr-1" />
+          Add Product
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-6xl">
         <DialogHeader>
           <DialogTitle>Add New Product</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input required name='name' onChange={handleChange} value={formdata.name} placeholder="Product Name" />
-            <Input required name='price' onChange={handleChange} type="number" value={formdata.price} placeholder="Price" min="0" />
-            <Input required name='stock' onChange={handleChange} type="number" value={formdata.stock} placeholder="Stock Quantity" min="0" />
-          </div>
-          <Textarea required name='description' onChange={handleChange} value={formdata.description} placeholder="Product Description" />
-          <div>
-            <label className="text-sm font-medium text-gray-700 block mb-2">Upload Images</label>
-            <Input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImageChange}
-              className="cursor-pointer"
-            />
-            {previewUrls.length > 0 && (
-              <div className="grid grid-cols-3 gap-2 mt-4">
-                {previewUrls.map((src, idx) => (
-                  <img
-                    key={idx}
-                    src={src}
-                    alt={`preview-${idx}`}
-                    className="h-24 w-full object-cover rounded-lg border"
+          <div className="promain">
+            <div className="prodiv1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block mb-1 text-sm font-medium">Product Name</label>
+                  <Input
+                    required
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                   />
-                ))}
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm font-medium">Price</label>
+                  <Input
+                    required
+                    type="number"
+                    step="0.01"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm font-medium">Stock Quantity</label>
+                  <Input
+                    required
+                    type="number"
+                    name="noOfStock"
+                    value={formData.noOfStock}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm font-medium">Category</label>
+                  <select
+                    name="categoryId"
+                    value={formData.categoryId}
+                    onChange={handleChange}
+                    required
+                    className="border rounded px-3 py-2 w-full"
+                  >
+                    <option disabled value="">
+                      Select the category
+                    </option>
+                    {categories &&
+                      categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.categoryName ?? 'Uncategorized'}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div className="flex items-center gap-2 mt-6">
+                  <input
+                    type="checkbox"
+                    name="inStock"
+                    checked={formData.inStock}
+                    onChange={handleChange}
+                    className="accent-blue-600"
+                  />
+                  <label className="text-sm">In Stock</label>
+                </div>
               </div>
-            )}
+              <div>
+                <label className="block mb-1 text-sm font-medium">Description</label>
+                <Textarea
+                  required
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className="block mb-1 text-sm font-medium">Features</label>
+                <Select
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  onChange={handleChangeSelect1}
+                  value={selectedOptions1}
+                  options={options1}
+                  styles={{
+                    control: (baseStyles) => ({
+                      ...baseStyles,
+                    }),
+                  }}
+                />
+              </div>
+            </div>
+            <div className="prodiv2">
+              <div>
+                <label className="block mb-1 text-sm font-medium">Upload Images</label>
+                <Input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {previews.length > 0 && (
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
+                  >
+                    <SortableContext
+                      items={previews}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <div className="grid grid-cols-3 gap-2 mt-4">
+                        {previews.map((src) => (
+                          <SortableImage key={src} id={src} src={src} />
+                        ))}
+                      </div>
+                    </SortableContext>
+                  </DndContext>
+                )}
+              </div>
+            </div>
           </div>
           <div className="flex justify-end">
-            <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
+            <Button
+              type="submit"
+              className="bg-blue-600 text-white hover:bg-blue-700"
+            >
               Submit
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
+  );
+};
+
+const SortableImage = ({ id, src }: { id: string; src: string }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="cursor-move"
+    >
+      <img
+        src={src}
+        alt="preview"
+        className="h-24 w-full object-cover rounded-lg border"
+      />
+    </div>
   );
 };

@@ -7,6 +7,7 @@ import inviteUserReducer from '../slices/authentication/inviteUser';
 import registerReducer from '../slices/authentication/registerForm';
 import productReducer from '../slices/product.slice';
 import featureReducer from '../slices/feature.slice'
+import categoryReducer from '../slices/category';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   inviteUser: inviteUserReducer,
   register: registerReducer,
   productSelector:productReducer,
-  featureSelector:featureReducer
+  featureSelector:featureReducer,
+  categorySelector:categoryReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

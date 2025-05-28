@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { FeatureAPI } from '../service/feature';
 import { CreateFeaturePayload, UpdateFeaturePayload } from '../types/feature';
 

@@ -5,10 +5,14 @@ export enum ApiVersions {
 
 
 export enum Products{
-    PRODUCTS = '/product',
-    PRODUCT = '/products',
+    PRODUCT = '/product',
+    PRODUCTS = '/products',
 }
 export enum Feature{
     FEATURES = '/features',
     FEATURE = '/feature',
+}
+export enum Category{
+    CATEGORY = '/category',
+    CATEGORYS = '/categories',
 }
