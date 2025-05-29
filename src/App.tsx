@@ -143,10 +143,17 @@ import { WishlistList } from './components/admin/Wishlists/WishlistsList';
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const userAdmin = JSON.parse(localStorage.getItem('user')|| '');
+  const flag = userAdmin?.role?.id === 1  
 
   return (
     <>
-      {!isAdminRoute ? <Navigation /> : <AdminHeader />}
+      {/* {!isAdminRoute ? <Navigation /> : <AdminHeader />} */}
+      {!isAdminRoute || !flag ? (
+        <Navigation /> // Show main Navigation if it's not an admin route or not Super User
+      ) : (
+        <AdminHeader /> // Show AdminHeader for Admin routes and Super User role
+      )}
       {children}
       {!isAdminRoute && <Footer />}
       {!isAdminRoute && <Chatbot />}
@@ -157,7 +164,8 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 const queryClient = new QueryClient();
 
 const App = () => {
-
+  const userAdmin = JSON.parse(localStorage.getItem('user')|| '');
+  const flag = userAdmin?.role?.id === 1   
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -172,14 +180,16 @@ const App = () => {
                       <Routes>
                         {/* Admin routes */}
                         <Route path="/admin/login" element={<AdminLogin />} />
-                        <Route path="/admin/dashboard" element={<AdminRoute element={<DashboardOverview />} />} />
-                        <Route path="/admin/products" element={<AdminRoute element={<ProductsList />} />} />
-                        <Route path="/admin/features" element={<AdminRoute element={<FeatureList />} />} />
-                        <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
-                        <Route path="/admin/carts" element={<AdminRoute element={<CartList />} />} />
-                        <Route path="/admin/wishlists" element={<AdminRoute element={<WishlistList />} />} />
-
-                       
+                         {flag && (
+                            <>
+                              <Route path="/admin/dashboard" element={<AdminRoute element={<DashboardOverview />} />} />
+                              <Route path="/admin/products" element={<AdminRoute element={<ProductsList />} />} />
+                              <Route path="/admin/features" element={<AdminRoute element={<FeatureList />} />} />
+                              <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
+                              <Route path="/admin/carts" element={<AdminRoute element={<CartList />} />} />
+                              <Route path="/admin/wishlists" element={<AdminRoute element={<WishlistList />} />} />
+                            </>
+                          )}
 
 
                         {/* Public/User routes */}

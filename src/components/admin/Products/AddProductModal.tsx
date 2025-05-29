@@ -49,6 +49,7 @@ export const AddProductModal: React.FC = () => {
     categoryId: '',
     price: '',
     noOfStock: '',
+    totalNoOfStock:'',
     inStock: true,
   });
 
@@ -112,6 +113,7 @@ export const AddProductModal: React.FC = () => {
         noOfStock: Number(formData.noOfStock),
         features: selectedOptions1.map((option: { value: any }) => option.value) ?? [],
         createdBy: user?.id ?? 0,
+        totalNoOfStock: Number(formData.noOfStock ?? 0),
         imagesPath: imagesBase64,
         inStock: Boolean(formData.inStock),
       };
@@ -126,6 +128,7 @@ export const AddProductModal: React.FC = () => {
             categoryId: '',
             price: '',
             noOfStock: '',
+            totalNoOfStock:'',
             inStock: true,
           });
           setImages([]);

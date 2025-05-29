@@ -1,7 +1,6 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
-import { products, getCategories } from "@/data/product";
 import {
   Select,
   SelectContent,
@@ -12,20 +11,32 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { RootState } from "@/store/reducer";
+import { AppDispatch, useAppSelector } from "@/store";
+import { useDispatch } from "react-redux";
+import { fetchAllProducts } from "@/store/action/products";
+import { fetchAllCategorys } from "@/store/action/category";
 
 const ProductsPage = () => {
-  const categories = getCategories();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("featured");
   const [priceRange, setPriceRange] = useState<number[]>([0, 3000]);
   const [showFilters, setShowFilters] = useState(false);
+  const dispatch = useDispatch<AppDispatch>()
+
+
+  const { products } = useAppSelector((state:RootState)=> state.productSelector);
+  const { categories } = useAppSelector((state:RootState)=> state.categorySelector);
+  
   
   // Filter products based on selected filters
   const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+    console.log(String(product.categoryId) , selectedCategory)
+    const matchesCategory = selectedCategory === "all" || String(product?.category?.id) === selectedCategory;
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
     return matchesCategory && matchesPrice;
   });
+
   
   // Sort products
   const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -42,6 +53,13 @@ const ProductsPage = () => {
         return 0; // featured - no change to order
     }
   });
+
+
+
+  useEffect(()=>{
+        dispatch(fetchAllProducts());
+         dispatch(fetchAllCategorys());
+  },[dispatch])
   
   return (
     <>
@@ -82,16 +100,16 @@ const ProductsPage = () => {
                   <label htmlFor="all" className="text-sm">All Categories</label>
                 </div>
                 {categories.map(category => (
-                  <div key={category} className="flex items-center">
+                  <div key={category.id} className="flex items-center">
                     <input
                       type="radio"
-                      id={category}
+                      id={String(category.id)}
                       name="category"
-                      checked={selectedCategory === category}
-                      onChange={() => setSelectedCategory(category)}
+                      checked={selectedCategory === String(category.id)}
+                      onChange={() => setSelectedCategory(String(category.id))}
                       className="mr-2"
                     />
-                    <label htmlFor={category} className="text-sm capitalize">{category}</label>
+                    <label  className="text-sm capitalize">{category?.categoryName ?? ''}</label>
                   </div>
                 ))}
               </div>
@@ -146,7 +164,7 @@ const ProductsPage = () => {
                     id={product.id}
                     name={product.name}
                     price={product.price}
-                    image={product.images[0]}
+                    image={"product.images[0]"}
                     inStock={product.inStock}
                   />
                 ))}

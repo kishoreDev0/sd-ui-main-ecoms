@@ -1,8 +1,8 @@
 
 import React, { useEffect } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, ShoppingCart, Heart, Users, TrendingUp, TrendingDown } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, Heart, Users, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Plus, Eye, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch, useAppSelector } from '@/store';
 import { RootState } from '@/store/reducer';
@@ -12,6 +12,7 @@ import { fetchAllFeatures } from '@/store/action/feature';
 import { fetchAllProducts } from '@/store/action/products';
 import { fetchAllUsers } from '@/store/action/user';
 import { fetchAllWishlists } from '@/store/action/wishlist';
+import { Progress } from '../ui/progress';
 
 interface StatCardProps {
   title: string;
@@ -22,27 +23,24 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon: Icon, trend }) => (
-  <Card className="p-6 bg-white border border-gray-200 hover:shadow-lg transition-shadow">
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm font-medium text-gray-500">{title}</p>
-        <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
-        <div className="flex items-center mt-2">
-          {trend === 'up' ? (
-            <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-          ) : (
-            <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-          )}
-          <span className={`text-sm font-medium ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
-            {change}
-          </span>
-        </div>
-      </div>
-      <div className="p-3 bg-blue-50 rounded-lg">
-        <Icon className="h-6 w-6 text-blue-600" />
-      </div>
-    </div>
-  </Card>
+        <Card key={title} className="border-slate-200">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-slate-600">{title}</CardTitle>
+              <Icon className="h-4 w-4 text-slate-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-slate-900">{value}</div>
+              <div className="flex items-center text-xs text-slate-500">
+                {trend === "up" ? (
+                  <ArrowUpRight className="h-3 w-3 text-green-500 mr-1" />
+                ) : (
+                  <ArrowDownRight className="h-3 w-3 text-red-500 mr-1" />
+                )}
+                <span className={trend === "up" ? "text-green-600" : "text-red-600"}>{change}</span>
+                {/* <span className="ml-1">{description}</span> */}
+              </div>
+            </CardContent>
+          </Card>
 );
 
 interface DashboardOverviewProps {
@@ -108,10 +106,17 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
       dispatch(fetchAllProducts())
       dispatch(fetchAllUsers())
       dispatch(fetchAllWishlists())
-  },[dispatch])
+  },[dispatch]);
+
+    const lowStockProducts = products.filter(product => {
+  const stockPercentage = (product.noOfStock / product.totalNoOfStock) * 100;
+  console.log(stockPercentage)
+  return stockPercentage < 50; // Only keep products with less than 50% stock
+  });
+
 
   return (
-    <div className="space-y-6 dashmain  animate-fade-in">
+    <div className="space-y-6 dashmain bg-1slight-white  animate-fade-in">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
           <div key={index} onClick={() => onNavigate(stat.module)} className="cursor-pointer">
@@ -120,8 +125,8 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
+      <div className="flex gap-2">
+        <Card className="p-6 w-[75%]">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
           <div className="space-y-4">
             {[
@@ -145,7 +150,7 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
           </div>
         </Card>
 
-        <Card className="p-6">
+        {/* <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="grid grid-cols-2 gap-4">
             <Button 
@@ -198,7 +203,54 @@ export const  DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigat
               <span>View Categories</span>
             </Button>
           </div>
-        </Card>
+        </Card> */}
+         <div className="space-y-4 w-[25%]">
+          {/* Low Stock Alert */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-orange-600">
+                <AlertTriangle className="h-5 w-5" />
+                Low Stock Alert
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+               {lowStockProducts.length > 0  && lowStockProducts.map((item, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium">{item.name}</span>
+                    <span className="text-slate-500">{item.noOfStock} left</span>
+                  </div>
+                  <Progress value={(item.noOfStock / item.totalNoOfStock) * 100} className="h-2" />
+                </div>
+              ))}
+              <Button size="sm" className="w-full mt-4">
+                <Plus className="h-4 w-4 mr-2" />
+                Restock Items
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button variant="outline" onClick={() => navigateAlong('products')} className="w-full justify-start">
+                <Plus className="h-4 w-4 mr-2" />
+                Add New Product
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                <Eye className="h-4 w-4 mr-2" />
+                View All Orders
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                <Users className="h-4 w-4 mr-2" />
+                Customer Management
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
