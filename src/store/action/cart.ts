@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { CartAPI } from '../service/cart';
-import { CreateCartPayload, UpdateCartPayload } from '../types/cart';
+import { CreateCartPayload, UpdateCartListPayload, UpdateCartPayload } from '../types/cart';
 
 const cartAPI = new CartAPI();
 
@@ -12,7 +12,7 @@ export const createCart = createAsyncThunk(
       return response.data;
     } catch (error) {
       
-      return rejectWithValue('Unexpected error occurred while creating the feature');
+      return rejectWithValue('Unexpected error occurred while creating the cart');
     }
   }
 );
@@ -30,6 +30,19 @@ export const fetchAllCarts = createAsyncThunk(
   }
 );
 
+export const fetchCartsListbyUserId = createAsyncThunk(
+  'carts/fetchCartsListbyUserId',
+  async (id:number, { rejectWithValue }) => {
+    try {
+      const response = await cartAPI.fetchAllCartsByUserId(id);
+      return response.data;
+    } catch (error) {
+      
+      return rejectWithValue('Unexpected error occurred while fetching carts');
+    }
+  }
+);
+
 export const updateCart = createAsyncThunk(
   'carts/updateCart',
   async ({ id, payload }: { id: number; payload: UpdateCartPayload }, { rejectWithValue }) => {
@@ -38,7 +51,20 @@ export const updateCart = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error instanceof Error ? error.message : 'Failed to update feature'
+        error instanceof Error ? error.message : 'Failed to update cart'
+      );
+    }
+  }
+);
+export const updateCartlist = createAsyncThunk(
+  'wishlist/updateWishlist',
+  async ({ id, payload }: { id: number; payload: UpdateCartListPayload }, { rejectWithValue }) => {
+    try {
+      const response = await cartAPI.updateCartList(id, payload);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Failed to update cart'
       );
     }
   }
@@ -52,7 +78,7 @@ export const deleteCart = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error instanceof Error ? error.message : 'Failed to delete feature'
+        error instanceof Error ? error.message : 'Failed to delete cart'
       );
     }
   }

@@ -5,6 +5,12 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { Trash, ShoppingCart, Heart } from "lucide-react";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { AppDispatch, useAppSelector } from "@/store";
+import { RootState } from "@/store/reducer";
+import { useDispatch } from "react-redux";
+import {  fetchWishlistByUserId } from "@/store/action/wishlist";
+import { fetchAllProducts } from "@/store/action/products";
 
 const WishlistPage = () => {
   const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
@@ -14,11 +20,39 @@ const WishlistPage = () => {
     addToCart(item);
     toast.success(`${item.name} added to cart`);
   };
+
+  const { userList } = useAppSelector((state:RootState)=> state.wishlistSelector);
+  const { user } = useAppSelector((state:RootState)=> state.auth);
+  const { products } = useAppSelector((state:RootState)=> state.productSelector);
+
+  const [filterProd, setFilterProd] = useState<any[]>();
+
+
+  const dispatch = useDispatch<AppDispatch>();
+
   
   const handleRemoveFromWishlist = (id: number, name: string) => {
     removeFromWishlist(id);
     toast.info(`${name} removed from wishlist`);
   };
+  useEffect(()=>{
+      dispatch(fetchWishlistByUserId(user?.id ?? 0))
+      dispatch(fetchAllProducts())
+      
+  },[dispatch])
+
+  useEffect(() => {
+    if (!userList || userList.length === 0) return;
+    const productIds = userList.map((id: string | number) => Number(id)); 
+    const filteredWish = products.filter((product) => 
+      productIds.includes(product.id)
+    );   
+    setFilterProd(filteredWish)
+  }, [userList, products]);
+
+
+
+ 
   
   return (
     <>
@@ -27,7 +61,7 @@ const WishlistPage = () => {
         <h1 className="font-serif text-3xl md:text-4xl font-bold mb-2">My Wishlist</h1>
         <p className="text-muted-foreground mb-8">Items you've saved for future consideration.</p>
         
-        {wishlistItems.length === 0 ? (
+        {filterProd && filterProd.length === 0 ? (
           <div className="text-center py-16">
             <Heart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h2 className="text-2xl font-medium mb-2">Your wishlist is empty</h2>
@@ -47,13 +81,13 @@ const WishlistPage = () => {
                 <div className="col-span-2">Actions</div>
               </div>
               
-              {wishlistItems.map(item => (
+              {filterProd  && filterProd.map(item => (
                 <div key={item.id} className="border-t grid grid-cols-1 md:grid-cols-5 p-4 gap-4 items-center">
                   {/* Product Info */}
                   <div className="md:col-span-2 flex items-center gap-4">
                     <Link to={`/products/${item.id}`} className="h-16 w-16 flex-shrink-0">
                       <img
-                        src={item.image}
+                        src={"item.image"}
                         alt={item.name}
                         className="h-full w-full object-cover"
                       />

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart, Minus, Plus, Check, ArrowLeft } from "lucide-react";
@@ -9,13 +9,39 @@ import { useWishlist } from "@/context/WishlistContext";
 import { ProductCard } from "@/components/ProductCard";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/store";
+import { fetchAllProducts } from "@/store/action/products";
+import { RootState } from "@/store/reducer";
+import { Product } from "@/store/types/products";
+import { fetchAllFeatures } from "@/store/action/feature";
+import { Feature } from "@/store/types/feature";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = getProductById(parseInt(id || "0"));
+  // const product = getProductById(parseInt(id || "0"));
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch<AppDispatch>();
+  const [product, setProduct] = useState<Product>();
+  const { products } = useAppSelector((state:RootState)=> state.productSelector);
+  const { features } = useAppSelector((state:RootState)=> state.featureSelector);
+
+ 
+    useEffect(()=>{
+      dispatch(fetchAllProducts())
+      dispatch(fetchAllFeatures())
+    },[dispatch])
+    
+    useEffect(()=>{    
+          const filterprod = products.find((prod:Product)=> { return prod.id === Number(id)})
+          setProduct(filterprod)
+         
+    },[products])
+
+  
+
 
   const { addToCart } = useShoppingCart();
   
@@ -45,7 +71,7 @@ const ProductDetailPage = () => {
           id: product.id,
           name: product.name,
           price: product.price,
-          image: product.images[0],
+          image: "product.images[0]",
         });
       }
       toast.success(`${product.name} added to cart`);
@@ -60,7 +86,7 @@ const ProductDetailPage = () => {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.images[0],
+        image: "product.images[0]",
       });
     }
   };
@@ -74,6 +100,9 @@ const ProductDetailPage = () => {
 
   // Recommended Products - normally would be based on product category or AI recommendations
   const recommendedProducts = [1, 2, 3].filter(pid => pid !== product.id).map(pid => getProductById(pid)).filter(Boolean);
+
+
+
 
   return (
     <>
@@ -92,13 +121,13 @@ const ProductDetailPage = () => {
           <div>
             <div className="aspect-square overflow-hidden mb-4">
               <img
-                src={product.images[selectedImageIndex]}
+                src={"product.images[selectedImageIndex]"}
                 alt={product.name}
                 className="h-full w-full object-cover"
               />
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2">
-              {product.images.map((image, index) => (
+              {/* {product.images.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
@@ -113,7 +142,7 @@ const ProductDetailPage = () => {
                     className="h-full w-full object-cover"
                   />
                 </button>
-              ))}
+              ))} */}
             </div>
           </div>
           
@@ -129,12 +158,15 @@ const ProductDetailPage = () => {
             <div>
               <h3 className="font-medium mb-2">Features:</h3>
               <ul className="space-y-1">
-                {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 mt-1 text-luxury-gold" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
+                  {product.features.map((featureId: number) => {
+                    const fullFeature = features.find((f: Feature) => f.id === Number(featureId));
+                    return (
+                      <li key={featureId} className="flex items-start gap-2">
+                        <Check className="h-4 w-4 mt-1 text-luxury-gold" />
+                        <span>{fullFeature?.name || 'Unknown feature'}</span>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
             
@@ -207,7 +239,7 @@ const ProductDetailPage = () => {
                   id={recProduct.id}
                   name={recProduct.name}
                   price={recProduct.price}
-                  image={recProduct.images[0]}
+                  image={"recProduct.images[0]"}
                   inStock={recProduct.inStock}
                 />
               ))}

@@ -9,6 +9,7 @@ export interface Wishlist {
 
 export interface WishlistState {
     wishlist: Wishlist[];
+    userList:number[]
     loading: boolean;
     error: string | null;
 }
@@ -33,4 +34,9 @@ export interface WishlistDetails {
 export interface UpdateWishlistPayload {
   productIds:number[];
   updatedBy?: number;
+}
+
+export interface UpdateWishlistListPayload {
+  productId:number;
+  updatedBy: number;
 }

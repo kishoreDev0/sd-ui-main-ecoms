@@ -3,13 +3,15 @@ import {
   createCart,
   updateCart,
   fetchAllCarts,
-  deleteCart
+  deleteCart,
+  fetchCartsListbyUserId
 } from '../action/cart';
 import { Cart, CartState } from '../types/cart';
 import { ApiResponse } from '../types/response.types';
 
 const initialState: CartState = {
   carts: [],
+  cartList:[],
   loading: false,
   error: null,
 };
@@ -54,6 +56,26 @@ const cartReducer = createSlice({
         state.loading = false;
         state.error = 'Failed to fetch carts';
       });
+
+
+      builder
+      .addCase(fetchCartsListbyUserId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        fetchCartsListbyUserId.fulfilled,
+        (state, action: PayloadAction<ApiResponse<Cart[]>>) => {
+          if (action.payload?.data) {
+            state.cartList = action.payload.data.productIds;
+          }
+          state.loading = false;
+        }
+      )
+      .addCase(fetchCartsListbyUserId.rejected, (state) => {
+        state.loading = false;
+        state.error = 'Failed to fetch carts';
+      });
+
 
     builder
       .addCase(updateCart.pending, (state) => {

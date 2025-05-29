@@ -3,13 +3,15 @@ import {
   createWishlist,
   updateWishlist,
   fetchAllWishlists,
-  deleteWishlist
+  deleteWishlist,
+  fetchWishlistByUserId
 } from '../action/wishlist';
 import { Wishlist, WishlistState } from '../types/wishlist';
 import { ApiResponse } from '../types/response.types';
 
 const initialState: WishlistState = {
   wishlist: [],
+  userList: [],
   loading: false,
   error: null,
 };
@@ -90,6 +92,25 @@ const wishlistReducer = createSlice({
       .addCase(deleteWishlist.rejected, (state) => {
         state.loading = false;
         state.error = 'Failed to delete feature';
+      });
+
+      // fetchWishlistByUserId
+       builder
+      .addCase(fetchWishlistByUserId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        fetchWishlistByUserId.fulfilled,
+        (state, action: PayloadAction<ApiResponse<Wishlist[]>>) => {
+          if (action.payload?.data) {
+            state.userList = action.payload.data?.productIds;
+          }
+          state.loading = false;
+        }
+      )
+      .addCase(fetchWishlistByUserId.rejected, (state) => {
+        state.loading = false;
+        state.error = 'Failed to fetch carts';
       });
   },
 });

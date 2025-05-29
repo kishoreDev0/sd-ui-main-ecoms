@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { Heart, HeartIcon } from "lucide-react";
 import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { cn } from "@/lib/utils";
@@ -12,9 +12,12 @@ interface ProductCardProps {
   price: number;
   image: string;
   inStock?: boolean;
+  isWishlisted: boolean;
+  onToggleWishlist: (e: any,id: number) => void;
 }
 
-export function ProductCard({ id, name, price, image, inStock = true }: ProductCardProps) {
+export function ProductCard({ id, name, price, image, inStock = true,isWishlisted,onToggleWishlist }: ProductCardProps) {
+  
   const { addToCart, isItemInCart } = useShoppingCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   
@@ -38,16 +41,17 @@ export function ProductCard({ id, name, price, image, inStock = true }: ProductC
   return (
     <div className="group relative overflow-hidden bg-white">
       {/* Wishlist Button */}
-      <button
-        onClick={handleWishlist}
-        className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-white/70 hover:bg-white backdrop-blur-sm transition-colors"
+       <button
+        onClick={(e) => onToggleWishlist(e,id)}
+        aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+        className="absolute top-2 right-2 p-1 z-99 cursor-pointer"
       >
-        <Heart
-          className={cn(
-            "h-4 w-4 transition-colors",
-            inWishlist ? "fill-luxury-gold text-luxury-gold" : "text-luxury-navy"
-          )}
-        />
+        {isWishlisted ? (
+          <HeartIcon fill="currentColor" className="text-black-600 w-6 h-6" />
+        ) : (
+          <Heart className="text-gray-400 w-6 h-6 hover:text-red-600" />
+        )}
+        
       </button>
 
       {/* Product Image with Link */}

@@ -9,6 +9,7 @@ export interface Cart {
 
 export interface CartState {
     carts: Cart[];
+    cartList:number[],
     loading: boolean;
     error: string | null;
 }
@@ -33,5 +34,11 @@ export interface CartDetails {
 export interface UpdateCartPayload {
 
   productIds:number[];
+  updatedBy?: number;
+}
+
+export interface UpdateCartListPayload {
+
+  productId:number;
   updatedBy?: number;
 }

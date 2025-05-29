@@ -1,28 +1,51 @@
 
-import { Navigation } from "@/components/navbar/Navigation";
-import { Footer } from "@/components/Footer";
-import { Chatbot } from "@/components/chatbot/Chatbot";
 import { OrderConfirmPopup } from "@/components/OrderConfirmPopup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { Trash, Plus, Minus, ShoppingCart, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/store";
+import { RootState } from "@/store/reducer";
+import { fetchCartsListbyUserId } from "@/store/action/cart";
+import { fetchAllProducts } from "@/store/action/products";
 
 const CartPage = () => {
   const { 
-    cartItems, 
     removeFromCart, 
     updateQuantity, 
     clearCart, 
     getCartTotal,
     setShowOrderConfirm
   } = useShoppingCart();
+  const { user } = useAppSelector((state:RootState)=> state.auth)
+  const dispatch = useDispatch<AppDispatch>();
+  const { cartList } = useAppSelector((state:RootState)=> state.cartSelector);
+  const { products } = useAppSelector((state:RootState)=> state.productSelector);
+  const [filterProd, setFilterProd] = useState<any[]>();
+   
+
+  useEffect(()=>{
+      dispatch(fetchAllProducts())
+      dispatch(fetchCartsListbyUserId(user?.id ?? 0))
+    },[dispatch])
   
   const handleCheckout = () => {
-    // In a real application, you would redirect to checkout/payment page
     setShowOrderConfirm(true);
   };
+   useEffect(() => {
+    if (!cartList || cartList.length === 0) return;
+    const productIds = cartList.map((id: string | number) => Number(id)); 
+    const filteredCart = products.filter((product) => 
+      productIds.includes((product.id))
+    );   
+
+    console.log(filteredCart)
+
+    setFilterProd(filteredCart)
+  }, [cartList, products]);
   
   return (
     <>
@@ -32,7 +55,7 @@ const CartPage = () => {
         <h1 className="font-serif text-3xl md:text-4xl font-bold mb-2">Shopping Cart</h1>
         <p className="text-muted-foreground mb-8">Review your items before proceeding to checkout.</p>
         
-        {cartItems.length === 0 ? (
+        {filterProd && filterProd.length === 0 ? (
           <div className="text-center py-16">
             <ShoppingCart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h2 className="text-2xl font-medium mb-2">Your cart is empty</h2>
@@ -55,13 +78,13 @@ const CartPage = () => {
                   <div className="col-span-2">Total</div>
                 </div>
                 
-                {cartItems.map(item => (
+                {filterProd && filterProd.map(item => (
                   <div key={item.id} className="border-t grid grid-cols-1 md:grid-cols-12 p-4 gap-4 items-center">
                     {/* Product Info */}
                     <div className="md:col-span-6 flex items-center gap-4">
                       <Link to={`/products/${item.id}`} className="h-20 w-20 flex-shrink-0">
                         <img
-                          src={item.image}
+                          src={"item.image"}
                           alt={item.name}
                           className="h-full w-full object-cover"
                         />
@@ -81,7 +104,7 @@ const CartPage = () => {
                     
                     {/* Price */}
                     <div className="md:col-span-2 font-medium">
-                      ${item.price.toLocaleString()}
+                      ${item.price.toLocaleString() }
                     </div>
                     
                     {/* Quantity */}
@@ -109,7 +132,7 @@ const CartPage = () => {
                     
                     {/* Total */}
                     <div className="md:col-span-2 font-medium">
-                      ${(item.price * item.quantity).toLocaleString()}
+                      {item.quantity ? '$'+(item.price * item.quantity).toLocaleString() : '-'}
                     </div>
                   </div>
                 ))}

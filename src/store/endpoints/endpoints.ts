@@ -19,6 +19,7 @@ export enum Category{
 export enum Cart{
     CART = '/cart',
     CARTS = '/carts',
+    LIST = '/list'
 }
 export enum UserRoutes {
   USERS = '/users',
@@ -27,4 +28,5 @@ export enum UserRoutes {
 export enum Wishlist{
     WISHLIST = '/wishlist',
     WISHLISTS = '/wishlists',
+    LIST =  '/list'
 }

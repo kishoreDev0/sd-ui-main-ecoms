@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { WishlistAPI } from '../service/wishlist';
-import { CreateWishlistPayload, UpdateWishlistPayload } from '../types/wishlist';
+import { CreateWishlistPayload, UpdateWishlistListPayload, UpdateWishlistPayload } from '../types/wishlist';
 
 const cartAPI = new WishlistAPI();
 
 export const createWishlist = createAsyncThunk(
-  'carts/createWishlist',
+  'wishlist/createWishlist',
   async ({ wishlistData }: { wishlistData: CreateWishlistPayload }, { rejectWithValue }) => {
     try {
       const response = await cartAPI.createWishlist(wishlistData);
@@ -18,20 +18,33 @@ export const createWishlist = createAsyncThunk(
 );
 
 export const fetchAllWishlists = createAsyncThunk(
-  'carts/fetchAllWishlists',
+  'wishlist/fetchAllWishlists',
   async (_, { rejectWithValue }) => {
     try {
       const response = await cartAPI.fetchAllWishlists();
       return response.data;
     } catch (error) {
       
-      return rejectWithValue('Unexpected error occurred while fetching carts');
+      return rejectWithValue('Unexpected error occurred while fetching wishlist');
+    }
+  }
+);
+
+export const fetchWishlistByUserId = createAsyncThunk(
+  'wishlist/fetchAllWishlistsByUserId',
+  async (id:number, { rejectWithValue }) => {
+    try {
+      const response = await cartAPI.getWishlistByUserId(id);
+      return response.data;
+    } catch (error) {
+      
+      return rejectWithValue('Unexpected error occurred while fetching wishlist');
     }
   }
 );
 
 export const updateWishlist = createAsyncThunk(
-  'carts/updateWishlist',
+  'wishlist/updateWishlist',
   async ({ id, payload }: { id: number; payload: UpdateWishlistPayload }, { rejectWithValue }) => {
     try {
       const response = await cartAPI.updateWishlist(id, payload);
@@ -44,8 +57,22 @@ export const updateWishlist = createAsyncThunk(
   }
 );
 
+export const updateWishlistlist = createAsyncThunk(
+  'wishlist/updateWishlist',
+  async ({ id, payload }: { id: number; payload: UpdateWishlistListPayload }, { rejectWithValue }) => {
+    try {
+      const response = await cartAPI.updateWishlistList(id, payload);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Failed to update feature'
+      );
+    }
+  }
+);
+
 export const deleteWishlist = createAsyncThunk(
-  'carts/deleteWishlist',
+  'wishlist/deleteWishlist',
   async (id: number, { rejectWithValue }) => {
     try {
       const response = await cartAPI.deleteWishlist(id);

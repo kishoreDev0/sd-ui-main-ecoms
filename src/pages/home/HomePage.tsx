@@ -11,16 +11,49 @@ import { useDispatch } from "react-redux";
 import { fetchAllProducts } from "@/store/action/products";
 import { Category } from "@/store/types/categort";
 import { fetchAllCategorys } from "@/store/action/category";
+import { HttpStatusCode } from "@/constants";
+import { fetchWishlistByUserId, updateWishlistlist } from "@/store/action/wishlist";
+import { toast } from "react-toastify";
 
 const HomePage = () => {
   const { products } = useAppSelector((state:RootState)=> state.productSelector);
+  const { userList } = useAppSelector((state:RootState)=> state.wishlistSelector);
+  const { user } = useAppSelector((state:RootState)=> state.auth);
   const { categories } = useAppSelector((state:RootState)=> state.categorySelector);
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(()=>{
         dispatch(fetchAllProducts());
          dispatch(fetchAllCategorys());
+         dispatch(fetchWishlistByUserId(user?.id ?? 0))
   },[dispatch])
+
+   const handleToggleWishlist = async (e: { preventDefault: () => void; }, productId: number) => {
+        e.preventDefault();
+        console.log(productId);
+  
+        try {
+          const response = await dispatch(
+            updateWishlistlist({
+              id: user?.id ?? 0,
+              payload: {
+                productId,
+                updatedBy: user?.id ?? 0
+              } 
+            })
+          ).unwrap();
+          if(response.statusCode === HttpStatusCode.OK){
+            toast.success(response.message ?? 'Wishlist successfully updated')
+            dispatch(fetchWishlistByUserId(user?.id ?? 0))
+            dispatch(fetchAllProducts())
+          }
+          else{
+            toast.error(response.message ?? 'Wishlist has not updated')
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
   
   return (
     <>
@@ -140,11 +173,7 @@ const HomePage = () => {
                             </div>
                           </div>
               })
-            }
-
-           
-            
-           
+            }         
           </div>
         </div>
       </section>
@@ -160,16 +189,23 @@ const HomePage = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {products && products.map(product => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                image={'product.images'}
-                inStock={product.inStock}
-              />
-            ))}
+            {products && products.map(product => {
+                  const isWishlisted = userList 
+                    ? userList.includes(String(product.id))
+                    : false;
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      id={product.id}
+                      name={product.name}
+                      price={product.price}
+                      image={"loco.png"}
+                      inStock={product.inStock}
+                      isWishlisted={isWishlisted}
+                      onToggleWishlist={handleToggleWishlist}  // pass handler here
+                    />
+                  );
+                })}
           </div>
         </div>
       </section>
