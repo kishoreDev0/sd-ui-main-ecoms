@@ -71,6 +71,20 @@ export const updateWishlistlist = createAsyncThunk(
   }
 );
 
+export const moveWishlistlist = createAsyncThunk(
+  'wishlist/updateWishlist',
+  async ({ id, payload }: { id: number; payload: UpdateWishlistListPayload }, { rejectWithValue }) => {
+    try {
+      const response = await cartAPI.moveWishlistList(id, payload);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Failed to update feature'
+      );
+    }
+  }
+);
+
 export const deleteWishlist = createAsyncThunk(
   'wishlist/deleteWishlist',
   async (id: number, { rejectWithValue }) => {

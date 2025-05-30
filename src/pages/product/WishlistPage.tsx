@@ -1,40 +1,42 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useWishlist } from "@/context/WishlistContext";
-import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { Trash, ShoppingCart, Heart } from "lucide-react";
-import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { AppDispatch, useAppSelector } from "@/store";
 import { RootState } from "@/store/reducer";
 import { useDispatch } from "react-redux";
-import {  fetchWishlistByUserId } from "@/store/action/wishlist";
+import {  fetchWishlistByUserId, moveWishlistlist, updateWishlistlist } from "@/store/action/wishlist";
 import { fetchAllProducts } from "@/store/action/products";
+import { HttpStatusCode } from "@/constants";
+import { toast } from "react-toastify";
 
 const WishlistPage = () => {
-  const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
-  const { addToCart } = useShoppingCart();
-  
-  const handleAddToCart = (item: { id: number; name: string; price: number; image: string }) => {
-    addToCart(item);
-    toast.success(`${item.name} added to cart`);
-  };
-
   const { userList } = useAppSelector((state:RootState)=> state.wishlistSelector);
   const { user } = useAppSelector((state:RootState)=> state.auth);
   const { products } = useAppSelector((state:RootState)=> state.productSelector);
-
   const [filterProd, setFilterProd] = useState<any[]>();
-
-
   const dispatch = useDispatch<AppDispatch>();
 
-  
-  const handleRemoveFromWishlist = (id: number, name: string) => {
-    removeFromWishlist(id);
-    toast.info(`${name} removed from wishlist`);
+    const handleAddToCart = async (item: { id: number; name: string; price: number; image: string }) => {
+    try{
+       const result = await dispatch(moveWishlistlist({
+         id: user?.id ?? 0,
+         payload: {
+           productId: item.id,
+           updatedBy: user?.id ?? 0
+         }
+       })).unwrap();
+       if(result.statusCode === HttpStatusCode.OK ){
+          toast.success(result?.message ?? "Product moved to cart sucessfully")
+       }else{
+           toast.error(result?.message ?? "Product has not moved to cart")
+       }
+    }catch(error){
+      console.log(error)
+    }
   };
+
   useEffect(()=>{
       dispatch(fetchWishlistByUserId(user?.id ?? 0))
       dispatch(fetchAllProducts())
@@ -49,6 +51,31 @@ const WishlistPage = () => {
     );   
     setFilterProd(filteredWish)
   }, [userList, products]);
+
+   const handleToggleWishlist = async (e: { preventDefault: () => void; }, productId: number) => {
+        e.preventDefault();  
+        try {
+          const response = await dispatch(
+            updateWishlistlist({
+              id: user?.id ?? 0,
+              payload: {
+                productId,
+                updatedBy: user?.id ?? 0
+              } 
+            })
+          ).unwrap();
+          if(response.statusCode === HttpStatusCode.OK){
+            dispatch(fetchAllProducts())
+            dispatch(fetchWishlistByUserId(user?.id ?? 0))
+            toast.success(response.message ?? 'Wishlist successfully updated')
+          }
+          else{
+            toast.error(response.message ?? 'Wishlist has not updated')
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
 
 
@@ -113,7 +140,7 @@ const WishlistPage = () => {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => handleRemoveFromWishlist(item.id, item.name)}
+                      onClick={(e) => handleToggleWishlist(e,item.id)}
                     >
                       <Trash className="h-4 w-4 mr-2" /> Remove
                     </Button>
@@ -127,7 +154,7 @@ const WishlistPage = () => {
                 <Link to="/products">Continue Shopping</Link>
               </Button>
               
-              <Button 
+              {/* <Button 
                 variant="outline" 
                 onClick={() => {
                   clearWishlist();
@@ -136,7 +163,7 @@ const WishlistPage = () => {
                 className="border-red-300 text-red-600 hover:bg-red-50"
               >
                 <Trash className="h-4 w-4 mr-2" /> Clear Wishlist
-              </Button>
+              </Button> */}
             </div>
           </>
         )}

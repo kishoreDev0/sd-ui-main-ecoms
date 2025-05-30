@@ -40,5 +40,5 @@ export interface UpdateCartPayload {
 export interface UpdateCartListPayload {
 
   productId:number;
-  updatedBy?: number;
+  updatedBy: number;
 }

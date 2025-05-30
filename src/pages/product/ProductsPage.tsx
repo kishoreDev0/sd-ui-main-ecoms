@@ -71,7 +71,8 @@ const ProductsPage = () => {
        }
        startFetch();
          
-  },[dispatch])
+  },[dispatch]);
+  
     const handleToggleWishlist = async (e: { preventDefault: () => void; }, productId: number) => {
       e.preventDefault();
       console.log(productId);

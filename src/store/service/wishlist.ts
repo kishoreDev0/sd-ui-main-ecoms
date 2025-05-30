@@ -15,6 +15,9 @@ export class WishlistAPI {
   updateWishlistList = async (id: number, payload: UpdateWishlistListPayload) =>
     axiosInstance.patch(`${ApiVersions.V1}${Wishlist.WISHLISTS}${Wishlist.LIST}/${id}`, payload);
 
+  moveWishlistList = async (id: number, payload: UpdateWishlistListPayload) =>
+    axiosInstance.patch(`${ApiVersions.V1}${Wishlist.WISHLISTS}${Wishlist.MOVE}/${id}`, payload);
+
   deleteWishlist = async (id: number) =>
     axiosInstance.delete(`${ApiVersions.V1}${Wishlist.WISHLISTS}/${id}`);
 

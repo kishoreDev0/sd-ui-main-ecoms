@@ -16,17 +16,26 @@ export enum Category{
     CATEGORY = '/category',
     CATEGORYS = '/categories',
 }
+
 export enum Cart{
     CART = '/cart',
     CARTS = '/carts',
     LIST = '/list'
 }
+
 export enum UserRoutes {
   USERS = '/users',
   USER = '/user',
 }
+
 export enum Wishlist{
     WISHLIST = '/wishlist',
     WISHLISTS = '/wishlists',
-    LIST =  '/list'
+    LIST =  '/list',
+    MOVE = '/move'
+}
+export enum Order{
+    ORDER = '/order',
+    ORDERS = '/orders',
+    LIST = '/list'
 }

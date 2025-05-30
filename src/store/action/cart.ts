@@ -57,7 +57,7 @@ export const updateCart = createAsyncThunk(
   }
 );
 export const updateCartlist = createAsyncThunk(
-  'wishlist/updateWishlist',
+  'cart/updateCartlist',
   async ({ id, payload }: { id: number; payload: UpdateCartListPayload }, { rejectWithValue }) => {
     try {
       const response = await cartAPI.updateCartList(id, payload);
