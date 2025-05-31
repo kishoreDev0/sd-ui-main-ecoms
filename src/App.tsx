@@ -138,6 +138,7 @@ import AdminRoute from './route/AdminRoute';
 import { CategoryList } from './components/admin/category/CategoryList';
 import { CartList } from './components/admin/Carts/CartsList';
 import { WishlistList } from './components/admin/Wishlists/WishlistsList';
+import  AccountPage  from './pages/ui/AccountPage'
 
 // Component to wrap routes and apply conditional layout
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -208,6 +209,7 @@ const App = () => {
                         <Route path="/products" element={<ProductsPage />} />
                         <Route path="/products/:id" element={<ProductDetailPage />} />
                         <Route path="/wishlist" element={<WishlistPage />} />
+                        <Route path="/account" element={<AccountPage />} />
                         <Route path="/cart" element={<CartPage />} />
                         <Route path="*" element={<NotFound />} />
                       </Routes>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -17,14 +17,19 @@ type StepperFormProps = {
   initialData?: { address: string; notes: string };
 };
 
-const StepperForm: React.FC<StepperFormProps> = ({ open, onClose, onSubmit, initialData }) => {
+const StepperForm: React.FC<StepperFormProps> = ({
+  open,
+  onClose,
+  onSubmit,
+  initialData,
+}) => {
   const [step, setStep] = useState(1);
-  const [address, setAddress] = useState(initialData?.address || "");
-  const [notes, setNotes] = useState(initialData?.notes || "");
+  const totalSteps = 2;
+
+  const [address, setAddress] = useState("");
+  const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState<{ address?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const totalSteps = 2;
 
   useEffect(() => {
     if (open) {
@@ -35,11 +40,11 @@ const StepperForm: React.FC<StepperFormProps> = ({ open, onClose, onSubmit, init
     }
   }, [open, initialData]);
 
-  const validateAddress = useCallback(() => {
+  const validateAddress = () => {
     if (!address.trim()) return "Address is required";
     if (address.trim().length < 10) return "Address must be more descriptive";
     return "";
-  }, [address]);
+  };
 
   const handleNext = () => {
     const addressError = validateAddress();
@@ -66,10 +71,7 @@ const StepperForm: React.FC<StepperFormProps> = ({ open, onClose, onSubmit, init
 
     setIsSubmitting(true);
     try {
-      await onSubmit({
-        address: address.trim(),
-        notes: notes.trim(),
-      });
+      await onSubmit({ address: address.trim(), notes: notes.trim() });
       onClose();
     } catch (err) {
       console.error("Submit error:", err);
@@ -84,15 +86,17 @@ const StepperForm: React.FC<StepperFormProps> = ({ open, onClose, onSubmit, init
       icon: MapPin,
       content: (
         <div className="space-y-4">
-          <label className="text-sm font-semibold text-black">Delivery Address *</label>
+          <label className="text-sm font-semibold text-black">
+            Delivery Address *
+          </label>
           <Textarea
-            rows={5}
             value={address}
-            placeholder="Enter full address: street, city, state..."
             onChange={(e) => {
               setAddress(e.target.value);
               if (errors.address) setErrors({});
             }}
+            rows={5}
+            placeholder="Enter full address: street, city, state..."
             className={cn(
               "w-full resize-none border border-black focus:border-black focus:ring-0 bg-white text-black placeholder-gray-400",
               errors.address && "border-red-600 focus:border-red-600"
@@ -109,12 +113,14 @@ const StepperForm: React.FC<StepperFormProps> = ({ open, onClose, onSubmit, init
       icon: FileText,
       content: (
         <div className="space-y-4">
-          <label className="text-sm font-semibold text-black">Delivery Instructions</label>
+          <label className="text-sm font-semibold text-black">
+            Delivery Instructions
+          </label>
           <Textarea
-            rows={5}
             value={notes}
-            placeholder="Add any special instructions for delivery (e.g., leave at gate)"
             onChange={(e) => setNotes(e.target.value)}
+            rows={5}
+            placeholder="Add any special instructions for delivery"
             className="w-full resize-none border border-black focus:border-black focus:ring-0 bg-white text-black placeholder-gray-400"
           />
         </div>
@@ -126,15 +132,11 @@ const StepperForm: React.FC<StepperFormProps> = ({ open, onClose, onSubmit, init
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white border border-black p-0">
         <div className="p-4 border-b border-black">
-          <DialogTitle className="text-xl font-bold text-black">
-            Checkout
-          </DialogTitle>
-          <p className="text-xs text-gray-500">
-            Step {step} of {totalSteps}
-          </p>
+          <DialogTitle className="text-xl font-bold text-black">Checkout</DialogTitle>
+          <p className="text-xs text-gray-500">Step {step} of {totalSteps}</p>
         </div>
 
-        {/* Stepper Indicator */}
+        {/* Stepper Indicators */}
         <div className="px-4 pt-4">
           <div className="flex justify-between items-center">
             {stepData.map((item, i) => {
@@ -142,20 +144,26 @@ const StepperForm: React.FC<StepperFormProps> = ({ open, onClose, onSubmit, init
               const active = step === stepNum;
               const completed = step > stepNum;
               const Icon = item.icon;
-
               return (
                 <div key={stepNum} className="flex flex-col items-center gap-2">
-                  <div className={cn(
-                    "w-8 h-8 rounded-full border-2 flex items-center justify-center transition",
-                    completed
-                      ? "bg-black border-black text-white"
-                      : active
-                      ? "bg-black border-black text-white"
-                      : "bg-white border-black text-black"
-                  )}>
+                  <div
+                    className={cn(
+                      "w-8 h-8 rounded-full border-2 flex items-center justify-center transition",
+                      completed
+                        ? "bg-black border-black text-white"
+                        : active
+                        ? "bg-black border-black text-white"
+                        : "bg-white border-black text-black"
+                    )}
+                  >
                     {completed ? <Check className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
                   </div>
-                  <span className={cn("text-xs font-medium", active ? "text-black" : "text-gray-500")}>
+                  <span
+                    className={cn(
+                      "text-xs font-medium",
+                      active ? "text-black" : "text-gray-500"
+                    )}
+                  >
                     {item.title}
                   </span>
                 </div>
@@ -166,11 +174,9 @@ const StepperForm: React.FC<StepperFormProps> = ({ open, onClose, onSubmit, init
         </div>
 
         {/* Step Content */}
-        <div className="px-4 py-6">
-          {stepData[step - 1].content}
-        </div>
+        <div className="px-4 py-6">{stepData[step - 1].content}</div>
 
-        {/* Navigation */}
+        {/* Navigation Buttons */}
         <DialogFooter className="px-4 py-3 bg-white border-t border-black">
           <div className="flex justify-between w-full">
             <Button
