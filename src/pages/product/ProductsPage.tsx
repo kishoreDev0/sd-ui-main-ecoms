@@ -1,7 +1,6 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
-import { products, getCategories } from "@/data/product";
 import {
   Select,
   SelectContent,
@@ -12,20 +11,36 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { RootState } from "@/store/reducer";
+import { AppDispatch, useAppSelector } from "@/store";
+import { useDispatch } from "react-redux";
+import { fetchAllProducts } from "@/store/action/products";
+import { fetchAllCategorys } from "@/store/action/category";
+import { fetchWishlistByUserId,  updateWishlistlist } from "@/store/action/wishlist";
+import { HttpStatusCode } from "axios";
+import { toast } from "react-toastify";
 
 const ProductsPage = () => {
-  const categories = getCategories();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("featured");
-  const [priceRange, setPriceRange] = useState<number[]>([0, 3000]);
+  const [priceRange, setPriceRange] = useState<number[]>([0, 200000]);
   const [showFilters, setShowFilters] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+
+
+  const { products } = useAppSelector((state:RootState)=> state.productSelector);
+  const { categories } = useAppSelector((state:RootState)=> state.categorySelector);
+  const { user } = useAppSelector((state:RootState)=> state.auth);
+  const { userList } = useAppSelector((state:RootState)=> state.wishlistSelector)
+  
   
   // Filter products based on selected filters
   const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+    const matchesCategory = selectedCategory === "all" || String(product?.category?.id) === selectedCategory;
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
     return matchesCategory && matchesPrice;
   });
+
   
   // Sort products
   const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -39,9 +54,49 @@ const ProductsPage = () => {
       case "name-desc":
         return b.name.localeCompare(a.name);
       default:
-        return 0; // featured - no change to order
+        return 0; 
     }
   });
+
+
+
+  useEffect( ()=>{
+        dispatch(fetchAllProducts());
+        dispatch(fetchAllCategorys());
+       async function startFetch(){
+         if (user?.id !== undefined) {
+           await dispatch(fetchWishlistByUserId(user.id)).unwrap();
+          
+        }
+       }
+       startFetch();
+         
+  },[dispatch]);
+  
+    const handleToggleWishlist = async (e: { preventDefault: () => void; }, productId: number) => {
+      e.preventDefault();
+      console.log(productId);
+
+      try {
+        const response = await dispatch(
+          updateWishlistlist({
+            id: user?.id ?? 0,
+            payload: {
+              productId,
+              updatedBy: user?.id ?? 0
+            } 
+          })
+        ).unwrap();
+        if(response.statusCode === HttpStatusCode.Ok){
+          toast.success(response.message ?? 'Wishlist successfully updated')
+        }
+        else{
+          toast.error(response.message ?? 'Wishlist has not updated')
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
   
   return (
     <>
@@ -82,16 +137,16 @@ const ProductsPage = () => {
                   <label htmlFor="all" className="text-sm">All Categories</label>
                 </div>
                 {categories.map(category => (
-                  <div key={category} className="flex items-center">
+                  <div key={category.id} className="flex items-center">
                     <input
                       type="radio"
-                      id={category}
+                      id={String(category.id)}
                       name="category"
-                      checked={selectedCategory === category}
-                      onChange={() => setSelectedCategory(category)}
+                      checked={selectedCategory === String(category.id)}
+                      onChange={() => setSelectedCategory(String(category.id))}
                       className="mr-2"
                     />
-                    <label htmlFor={category} className="text-sm capitalize">{category}</label>
+                    <label  className="text-sm capitalize">{category?.categoryName ?? ''}</label>
                   </div>
                 ))}
               </div>
@@ -101,8 +156,8 @@ const ProductsPage = () => {
               <h2 className="font-medium text-lg mb-4">Price Range</h2>
               <div className="px-2">
                 <Slider
-                  defaultValue={[0, 3000]}
-                  max={3000}
+                  defaultValue={[0, 200000]}
+                  max={200000}
                   step={50}
                   value={priceRange}
                   onValueChange={setPriceRange}
@@ -139,18 +194,25 @@ const ProductsPage = () => {
                 <p className="text-muted-foreground">No products match your filters.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sortedProducts.map(product => (
-                  <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    name={product.name}
-                    price={product.price}
-                    image={product.images[0]}
-                    inStock={product.inStock}
-                  />
-                ))}
-              </div>
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {products && products.map(product => {
+                        const isWishlisted = userList 
+                          ? userList.includes(String(product.id))
+                          : false;
+                        return (
+                          <ProductCard
+                            key={product.id}
+                            id={product.id}
+                            name={product.name}
+                            price={product.price}
+                            image={"loco.png"}
+                            inStock={product.inStock}
+                            isWishlisted={isWishlisted}
+                            onToggleWishlist={handleToggleWishlist}  // pass handler here
+                          />
+                        );
+                      })}
+                    </div>
             )}
           </div>
         </div>

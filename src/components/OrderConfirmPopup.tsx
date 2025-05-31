@@ -9,18 +9,21 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CheckCircle, ShoppingBag } from "lucide-react";
-import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAppSelector } from "@/store";
+import { RootState } from "@/store/reducer";
 
 export function OrderConfirmPopup() {
-  const { showOrderConfirm, setShowOrderConfirm, clearCart } = useShoppingCart();
   const navigate = useNavigate();
-
+  const [ showOrderConfirm, setShowOrderConfirm] = useState(true);
+  const { orders } = useAppSelector((state:RootState)=> state.orderSelector)
   const handleClose = () => {
     setShowOrderConfirm(false);
-    clearCart();
+    // clearCart();
     navigate("/");
   };
+  const orderState = orders[0] ?? []
 
   return (
     <Dialog open={showOrderConfirm} onOpenChange={setShowOrderConfirm}>
@@ -44,7 +47,7 @@ export function OrderConfirmPopup() {
           <div className="rounded-lg bg-muted p-4 w-full">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Order Number:</span>
-              <span className="text-sm text-muted-foreground">#LX{Math.floor(100000 + Math.random() * 900000)}</span>
+              <span className="text-sm text-muted-foreground">#{orderState?.id ?? ''}</span>
             </div>
           </div>
         </div>

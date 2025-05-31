@@ -266,14 +266,12 @@ export const ProductsList: React.FC = () => {
       });
     });
     Promise.all(readers).then(images => {
-      setEditData(prev => prev ? { ...prev, images } : null);
+      setEditData((prev: any) => prev ? { ...prev, images } : null);
     });
   };
 
   const handleSave = () => {
     if (editData) {
-      // Construct payload, mapping categoryId back to category object if needed
-
       const payload = {
         name: editData.name,
         description: editData.description,
@@ -282,6 +280,7 @@ export const ProductsList: React.FC = () => {
         features: editData.features.map(Number) || [],
         price: Number(editData.price),
         noOfStock: Number(editData.noOfStock),
+        totalNoOfStock: Number(editData.noOfStock ?? 0),
         inStock: Boolean(editData.inStock),
         updatedBy: Number(user?.id ?? 0)
       };
@@ -307,6 +306,9 @@ export const ProductsList: React.FC = () => {
       console.log(error)
     }
   };
+
+
+  
 
 
   return (
@@ -339,7 +341,8 @@ export const ProductsList: React.FC = () => {
                 <TableHead>Product</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
-                <TableHead>Stock</TableHead>
+                <TableHead>Total Stock</TableHead>
+                <TableHead>In Stock</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -351,24 +354,25 @@ export const ProductsList: React.FC = () => {
                     <div className="flex items-center gap-3">
                       {product.images?.[0] && (
                         <img
-                          src={`data:image/jpeg;base64,${product.images[0]}`}
-                          alt={product.name}
+                          src={`data:image/jpeg;base64,${product?.images[0]}`}
+                          alt={product?.name}
                           className="w-10 h-10 rounded-lg object-cover bg-gray-100"
                         />
                       )}
-                      <span className="font-medium">{product.name}</span>
+                      <span className="font-medium">{product?.name}</span>
                     </div>
                   </TableCell>
-                  <TableCell>{product.category?.categoryName ?? 'N/A'}</TableCell>
-                  <TableCell>${product.price}</TableCell>
+                  <TableCell>{product?.category?.categoryName ?? 'N/A'}</TableCell>
+                  <TableCell>${product?.price}</TableCell>
+                   <TableCell>{product?.totalNoOfStock}</TableCell>
                   <TableCell>
-                    <span className={product.noOfStock === 0 ? 'text-red-600' : 'text-gray-900'}>
-                      {product.noOfStock}
+                    <span className={product?.noOfStock === 0 ? 'text-red-600' : 'text-gray-900'}>
+                      {product?.noOfStock}
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={product.inStock ? 'default' : 'secondary'}>
-                      {product.inStock ? 'In Stock' : 'Out of Stock'}
+                    <Badge variant={product?.inStock ? 'default' : 'secondary'}>
+                      {product?.inStock ? 'In Stock' : 'Out of Stock'}
                     </Badge>
                   </TableCell>
                   <TableCell>

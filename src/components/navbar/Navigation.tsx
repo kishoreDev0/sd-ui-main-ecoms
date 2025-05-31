@@ -1,6 +1,6 @@
 
 import { MouseEvent, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -73,7 +73,7 @@ export function Navigation() {
     };
   };
   const user = useAppSelector((state) => state.auth?.user);
-  
+  const navigate = useNavigate();
 
       useEffect(() => {
         const handleScroll = () => {
@@ -99,6 +99,9 @@ export function Navigation() {
     e.preventDefault()
       if(user === null){
         setIsFormOpen(true);
+      }
+      else{
+        navigate('/wishlist')
       }
   }
 
@@ -150,7 +153,7 @@ export function Navigation() {
             <Button variant="ghost" size="icon" className="relative">
               <Heart className="h-5 w-5" />
               {wishlistItems.length > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-luxury-gold text-white">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-black text-white">
                   {wishlistItems.length}
                 </Badge>
               )}
@@ -162,7 +165,7 @@ export function Navigation() {
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="h-5 w-5" />
               {cartItemCount > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-luxury-gold text-white">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-black text-white">
                   {cartItemCount}
                 </Badge>
               )}

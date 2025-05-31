@@ -7,6 +7,7 @@ export interface Product {
   features:number[];
   inStock: boolean;
   price: number;
+  totalNoOfStock:number;
   noOfStock: number;
   createdAt: string;
   updatedAt: string;
@@ -25,6 +26,7 @@ export interface CreateProductPayload {
   features:number[];
   inStock: boolean;
   price: number;
+  totalNoOfStock:number;
   noOfStock: number;
   createdBy?: number;
 }
@@ -41,6 +43,7 @@ export interface ProductDetails {
   features:number[];
   inStock: boolean;
   price: number;
+  totalNoOfStock:number;
   noOfStock: number;
   createdBy: {
     id:number
@@ -58,6 +61,7 @@ export interface UpdateProductPayload {
   features:string[];
   inStock: boolean;
   price: number;
+  totalNoOfStock:number;
   noOfStock: number;
   updatedBy?: number;
 }
