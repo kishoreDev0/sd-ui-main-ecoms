@@ -1,3 +1,5 @@
+import { Products } from "../endpoints/endpoints";
+
 export interface Order {
   id: number;
   shippingAddress: string;
@@ -18,17 +20,17 @@ export interface OrderState {
     loading: boolean;
     error: string | null;
 }
+export interface ProductQuantityItem {
+  product_id: number;
+  quantity: number;
+}
+
 export interface CreateOrderPayload {
-shippingAddress: string;
-  userId: number;
-  status: string; 
-  categoryId:number;
-  productIds:number[];
-  inStock: boolean;
-  totalAmount: number;
-  totalNoOfStock:number;
-  notes: string;
+  productQuantity: ProductQuantityItem[];
+  products: Products[];
   createdBy?: number;
+  address:string;
+  notes:string
 }
 
 export interface OrderDetails {
