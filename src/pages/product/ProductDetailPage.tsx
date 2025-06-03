@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart, ArrowLeft } from "lucide-react";
-import { getProductById } from "@/data/product";
 import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { ProductCard } from "@/components/ProductCard";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
@@ -15,6 +13,8 @@ import { RootState } from "@/store/reducer";
 import { Product } from "@/store/types/products";
 import { fetchAllFeatures } from "@/store/action/feature";
 import { Feature } from "@/store/types/feature";
+import { moveWishlistlist } from "@/store/action/wishlist";
+import { HttpStatusCode } from "@/constants";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -24,6 +24,7 @@ const ProductDetailPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { products } = useAppSelector((state: RootState) => state.productSelector);
   const { features } = useAppSelector((state: RootState) => state.featureSelector);
+  const { user } = useAppSelector((state:RootState)=> state.auth)
 
   useEffect(() => {
     dispatch(fetchAllProducts());
@@ -58,15 +59,26 @@ const ProductDetailPage = () => {
 
   const inWishlist = isInWishlist(product.id);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (product.inStock) {
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: "product.images[0]",
-      });
-      toast.success(`${product.name} added to cart`);
+        try{
+          const result = await dispatch(
+                  moveWishlistlist({
+                    id: user?.id ?? 0,
+                    payload: {
+                      productId: product?.id,
+                      updatedBy: user?.id ?? 0,
+                    },
+                  })
+                ).unwrap();
+                if (result.statusCode === HttpStatusCode.OK) {
+                  toast.success(result?.message ?? "Product moved to cart successfully");
+                } else {
+                  toast.error(result?.message ?? "Product has not moved to cart");
+                }
+        }catch(error){
+          console.log(error)
+        }
     }
   };
 
@@ -83,11 +95,7 @@ const ProductDetailPage = () => {
     }
   };
 
-  // Recommended Products
-  const recommendedProducts = [1, 2, 3]
-    .filter((pid) => pid !== product.id)
-    .map((pid) => getProductById(pid))
-    .filter(Boolean);
+
 
   return (
     <div className="bg-white min-h-screen font-sans">
@@ -218,26 +226,7 @@ const ProductDetailPage = () => {
         </div>
 
         {/* Recommended Products */}
-        {recommendedProducts.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">You May Also Like</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {recommendedProducts.map(
-                (recProduct) =>
-                  recProduct && (
-                    <ProductCard
-                      key={recProduct.id}
-                      id={recProduct.id}
-                      name={recProduct.name}
-                      price={recProduct.price}
-                      image={"recProduct.images[0]"}
-                      inStock={recProduct.inStock}
-                    />
-                  )
-              )}
-            </div>
-          </div>
-        )}
+        
       </div>
     </div>
   );

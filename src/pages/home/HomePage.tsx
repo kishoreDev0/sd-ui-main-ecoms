@@ -24,14 +24,14 @@ const HomePage = () => {
   useEffect(() => {
     dispatch(fetchAllProducts());
     dispatch(fetchAllCategorys());
-    dispatch(fetchWishlistByUserId(user?.id ?? 0));
+    if(user?.id ) dispatch(fetchWishlistByUserId(user?.id ?? 0));
   }, [dispatch]);
-
+ 
   const handleToggleWishlist = async (e: { preventDefault: () => void }, productId: number) => {
     e.preventDefault();
     console.log(productId);
-
-    try {
+    if(user?.id){
+          try {
       const response = await dispatch(
         updateWishlistlist({
           id: user?.id ?? 0,
@@ -43,7 +43,7 @@ const HomePage = () => {
       ).unwrap();
       if (response.statusCode === HttpStatusCode.OK) {
         toast.success(response.message ?? "Wishlist successfully updated");
-        dispatch(fetchWishlistByUserId(user?.id ?? 0));
+        if(user?.id )dispatch(fetchWishlistByUserId(user?.id ?? 0));
         dispatch(fetchAllProducts());
       } else {
         toast.error(response.message ?? "Wishlist has not updated");
@@ -51,6 +51,8 @@ const HomePage = () => {
     } catch (error) {
       console.log(error);
     }
+    }
+  
   };
 
   

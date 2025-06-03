@@ -63,3 +63,6 @@ export interface UpdateOrderPayload {
   notes: string;
   updatedBy?: number;
 }
+export interface OrderSubscribe {
+  email: string;
+}

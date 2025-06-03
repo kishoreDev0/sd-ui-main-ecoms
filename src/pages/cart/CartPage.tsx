@@ -58,7 +58,7 @@ const CartPage = () => {
 
   useEffect(() => {
     dispatch(fetchAllProducts());
-    dispatch(fetchCartsListbyUserId(user?.id ?? 0));
+    if(user?.id) dispatch(fetchCartsListbyUserId(user?.id ?? 0));
   }, [dispatch]);
 
   useEffect(() => {
@@ -74,6 +74,7 @@ const CartPage = () => {
         initialQuantities[product.id] = 1;
       }
     });
+      console.log(products)
 
     if (Object.keys(initialQuantities).length > 0) {
       setProductQuantities((prev) => ({ ...prev, ...initialQuantities }));
@@ -132,7 +133,8 @@ const CartPage = () => {
   };
 
   const handleRemoveFromCart = async (productId: number) => {
-    try {
+    if(user?.id){
+       try {
       const result = await dispatch(
         updateCartlist({
           id: user?.id ?? 0,
@@ -155,6 +157,8 @@ const CartPage = () => {
     } catch (error) {
       toast.error("Error removing item from cart");
     }
+    }
+   
   };
 
   const handleCheckout = () => {

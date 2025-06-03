@@ -73,6 +73,7 @@ const WishlistPage = () => {
       console.log(error);
     }
   };
+  console.log(filterProd)
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
@@ -82,7 +83,7 @@ const WishlistPage = () => {
           Items you've saved for future consideration.
         </p>
 
-        {filterProd && filterProd.length === 0 ? (
+        {filterProd && filterProd === undefined ? (
           <div className="text-center py-16 bg-white rounded-md shadow-sm">
             <Heart className="w-12 h-12 mx-auto text-red-600 mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Your Wishlist is Empty</h2>

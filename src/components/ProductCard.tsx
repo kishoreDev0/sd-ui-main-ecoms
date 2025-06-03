@@ -2,8 +2,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartIcon } from "lucide-react";
-import { useShoppingCart } from "@/context/ShoppingCartContext";
-import { useWishlist } from "@/context/WishlistContext";
 import { cn } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@/store";
@@ -30,14 +28,17 @@ export function ProductCard({ id, name, price, image, inStock = true,isWishliste
   const { user } = useAppSelector((state:RootState)=> state.auth);
   const { cartList } =  useAppSelector((state:RootState)=> state.cartSelector)
   useEffect(()=>{
-    dispatch(fetchCartsListbyUserId(user?.id ?? 0))
+    if(user?.id) dispatch(fetchCartsListbyUserId(user?.id ?? 0))
   },[])
   const isInCart = cartList.some((item) => Number(item) === id);
 
 
   const handleAddToCart = async (id:number) => {
-        try {
+
+        if(user?.id ){
+             try {
           console.log(id)
+          
           const result = await dispatch(
             moveWishlistlist({
               id: user?.id ?? 0,
@@ -57,6 +58,11 @@ export function ProductCard({ id, name, price, image, inStock = true,isWishliste
         } catch (error) {
           console.log(error);
         }
+        }
+        else{
+          toast.info("Please login first")
+        }
+       
       };
 
   return (
@@ -65,12 +71,12 @@ export function ProductCard({ id, name, price, image, inStock = true,isWishliste
        <button
         onClick={(e) => onToggleWishlist(e,id)}
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        className="absolute top-2 right-2 p-1 z-99 cursor-pointer"
+        className="absolute top-2  right-2 p-1 z-9 cursor-pointer"
       >
         {isWishlisted ? (
-          <HeartIcon fill="currentColor" className="text-black-600 w-6 h-6" />
+          <HeartIcon fill="currentColor" className="text-black-600 z-0 w-6 h-6" />
         ) : (
-          <Heart className="text-gray-400 w-6 h-6 hover:text-red-600" />
+          <Heart className="text-gray-400 w-6 h-6 hover:text-red-600 z-0" />
         )}
         
       </button>

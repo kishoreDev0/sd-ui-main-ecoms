@@ -28,35 +28,51 @@ import { FeatureList } from './components/admin/feature/FeatureList';
 import { Navigation } from './components/navbar/Navigation';
 import { Footer } from './components/Footer';
 import { Chatbot } from './components/chatbot/Chatbot';
-import  {DashboardOverview}  from './components/admin/Dashboard/DashboardOverview';  
+import { DashboardOverview } from './components/admin/Dashboard/DashboardOverview';
 import { AuthProvider } from './components/login/authState';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChatbotProvider } from './context/ChatbotContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { ShoppingCartProvider } from './context/ShoppingCartContext';
 import { TooltipProvider } from './components/ui/tooltip';
-import  {ProductsList}  from './components/admin/Products/ProductsList';
-import  {ToastContainer}  from 'react-toastify';
+import { ProductsList } from './components/admin/Products/ProductsList';
+import { ToastContainer } from 'react-toastify';
 import AdminRoute from './route/AdminRoute';
 import { CategoryList } from './components/admin/category/CategoryList';
 import { CartList } from './components/admin/Carts/CartsList';
 import { WishlistList } from './components/admin/Wishlists/WishlistsList';
-import  AccountPage  from './pages/ui/AccountPage'
+import AccountPage from './pages/ui/AccountPage';
+
+// Helper to safely parse JSON
+const getUserFromLocalStorage = () => {
+  const raw = localStorage.getItem('user');
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error("Invalid JSON in localStorage:", e);
+    return null;
+  }
+};
 
 // Component to wrap routes and apply conditional layout
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
-  const userAdmin = JSON.parse(localStorage.getItem('user')|| '');
-  const flag = userAdmin?.role?.id === 1  
+  const pathname = location.pathname;
+  const isAdminLogin = pathname === '/admin/login';
+  const isAdminRoute = pathname.startsWith('/admin');
+  const userAdmin = getUserFromLocalStorage();
+  const isAdmin = userAdmin?.role?.id === 1;
+
+  // Don't show any layout for admin login
+  if (isAdminLogin) return <>{children}</>;
 
   return (
     <>
-      {/* {!isAdminRoute ? <Navigation /> : <AdminHeader />} */}
-      {!isAdminRoute || !flag ? (
-        <Navigation /> // Show main Navigation if it's not an admin route or not Super User
+      {!isAdminRoute || !isAdmin ? (
+        <Navigation />
       ) : (
-        <AdminHeader /> // Show AdminHeader for Admin routes and Super User role
+        <AdminHeader />
       )}
       {children}
       {!isAdminRoute && <Footer />}
@@ -65,11 +81,13 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+
 const queryClient = new QueryClient();
 
 const App = () => {
-  const userAdmin = JSON.parse(localStorage.getItem('user')|| '');
-  const flag = userAdmin?.role?.id === 1   
+  const userAdmin = getUserFromLocalStorage();
+  const flag = userAdmin?.role?.id === 1 || false;
+
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -79,23 +97,21 @@ const App = () => {
               <ChatbotProvider>
                 <BrowserRouter>
                   <AuthProvider>
-                    <ToastContainer/>
+                    <ToastContainer />
                     <LayoutWrapper>
                       <Routes>
                         {/* Admin routes */}
                         <Route path="/admin/login" element={<AdminLogin />} />
-                         {flag && (
-                            <>
-                              <Route path="/admin/dashboard" element={<AdminRoute element={<DashboardOverview />} />} />
-                              <Route path="/admin/products" element={<AdminRoute element={<ProductsList />} />} />
-                              <Route path="/admin/features" element={<AdminRoute element={<FeatureList />} />} />
-                              <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
-                              <Route path="/admin/carts" element={<AdminRoute element={<CartList />} />} />
-                              <Route path="/admin/wishlists" element={<AdminRoute element={<WishlistList />} />} />
-                            </>
-                          )}
-
-
+                        {flag && (
+                          <>
+                            <Route path="/admin/dashboard" element={<AdminRoute element={<DashboardOverview />} />} />
+                            <Route path="/admin/products" element={<AdminRoute element={<ProductsList />} />} />
+                            <Route path="/admin/features" element={<AdminRoute element={<FeatureList />} />} />
+                            <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
+                            <Route path="/admin/carts" element={<AdminRoute element={<CartList />} />} />
+                            <Route path="/admin/wishlists" element={<AdminRoute element={<WishlistList />} />} />
+                          </>
+                        )}
                         {/* Public/User routes */}
                         <Route path="/login" element={<Login />} />
                         <Route path="/registerform" element={<RegistrationForm />} />

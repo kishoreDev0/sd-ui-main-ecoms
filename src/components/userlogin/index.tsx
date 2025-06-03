@@ -10,16 +10,40 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { loginUser } from "@/store/action/authentication/login";
+import { toast } from "react-toastify";
+import { initializeHttpClient } from "@/axios-setup/axios-interceptor";
 
 export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const { httpClient } = initializeHttpClient();
+  
 
-  const handleLogin = (e: React.FormEvent) => {
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform login logic
-    console.log("Logging in with", { email, password });
+     e.preventDefault();
+       const result = await dispatch(
+          loginUser({
+            email,
+            password,
+            api: httpClient,
+          })
+        ).unwrap();
+    
+         if (result) {
+          toast.success('Login successful!');
+          navigate('/');
+        } else {
+          toast.error('Login failed. Please check your credentials.');
+        }
   };
 
   const handleRegister = (e: React.FormEvent) => {

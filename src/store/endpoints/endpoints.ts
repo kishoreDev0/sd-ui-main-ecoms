@@ -37,5 +37,6 @@ export enum Wishlist{
 export enum Order{
     ORDER = '/order',
     ORDERS = '/orders',
-    LIST = '/list'
+    LIST = '/list',
+    SUBSCRIBE = '/subscribe',
 }

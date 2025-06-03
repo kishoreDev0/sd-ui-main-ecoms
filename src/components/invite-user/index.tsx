@@ -30,7 +30,7 @@ const InviteUserForm: React.FC<InviteUserFormProps> = ({ onClose }) => {
   useEffect(() => {
     if (isSuccess) {
       alert('User invitation sent successfully');
-      navigate('/dashboard');
+      navigate('/');
     }
   }, [isSuccess, navigate]);
 

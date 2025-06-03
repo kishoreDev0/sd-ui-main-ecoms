@@ -1,6 +1,44 @@
+import { HttpStatusCode } from "@/constants";
+import { AppDispatch, useAppSelector } from "@/store";
+import { subscribeOrder } from "@/store/action/order";
+import { RootState } from "@/store/reducer";
+import { Toast } from "@radix-ui/react-toast";
+import { ChangeEvent, MouseEvent as ReactMouseEvent, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export function Footer() {
+  const { user } = useAppSelector((state:RootState)=> state.auth);
+   const dispatch = useDispatch<AppDispatch>();
+   const[formData , setFormData] = useState({
+    email:"",
+  }
+  ) 
+  const handleSubscribe = async(e: ReactMouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    
+    console.log(formData);
+    if(user?.id ){
+       const response = await dispatch(subscribeOrder({ id: user?.id, payload: { email: formData.email } })).unwrap();
+       if(response.statusCode === HttpStatusCode.OK){
+         toast.success("Subscribed Successfully")
+       }
+       else{
+        toast.error("Something went wrong")
+       }
+    }else{
+     toast.error("Please login first")
+    }
+       
+  }
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>{
+    const {name , value} =  e.target
+    setFormData({
+      ...formData,
+      [name]:value
+    })
+  }
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-12">
@@ -75,10 +113,14 @@ export function Footer() {
               <input
                 type="email"
                 placeholder="Your email address"
+                name="email"
+                value={formData.email}
+                onChange={(e)=> handleChange(e)}
                 className="p-2 text-sm rounded-md bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors"
               />
               <button
                 type="submit"
+                onClick={(e) => handleSubscribe(e)}
                 className="p-2 text-sm font-medium rounded-md bg-red-600 hover:bg-red-700 text-white transition-colors"
               >
                 Subscribe

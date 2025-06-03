@@ -1,6 +1,6 @@
 import { ApiVersions, Order } from '../endpoints/endpoints';
 import { axiosInstance } from '../../components/httpClient/axiosInstance';
-import { CreateOrderPayload, UpdateOrderPayload } from '../types/order';
+import { CreateOrderPayload, OrderSubscribe, UpdateOrderPayload } from '../types/order';
 
 export class OrderAPI {
   createOrder = async (payload: CreateOrderPayload) =>
@@ -14,4 +14,7 @@ export class OrderAPI {
 
   deleteOrder = async (id: number) =>
     axiosInstance.delete(`${ApiVersions.V1}${Order.ORDERS}/${id}`);
+
+  subscribeOrder = async (id: number , payload:OrderSubscribe) =>
+    axiosInstance.post(`${ApiVersions.V1}${Order.ORDERS}${Order.SUBSCRIBE}/${id}`,payload);
 }

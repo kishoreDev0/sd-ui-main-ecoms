@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
 import { LogOut, UserPlus, Key,  Send } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAppSelector, AppDispatch } from "@/store";
 import { RootState } from "@/store/reducer";
 // import { HttpStatusCode } from "@/constants";
 
+interface user{
 
+  firstName: string | null;
+  lastName: string | null;
+  officialEmail: string;
+  primaryPhone: string | null;
+  username: string;
+}
 const AccountPage = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
@@ -20,12 +25,19 @@ const AccountPage = () => {
   const [showResetModal, setShowResetModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [resetEmail, setResetEmail] = useState(user?.email || "");
-  const [profileData, setProfileData] = useState({ name: user?.name || "", email: user?.email || "" });
+  const [profileData, setProfileData] = useState<user>({
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    officialEmail: user?.officialEmail || '',
+    primaryPhone: user?.primaryPhone || '',
+    username: user?.username || '',
+  });
+
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (!user) {
-      navigate("/login");
+      navigate("/");
     }
   }, [user, navigate]);
 
@@ -40,7 +52,7 @@ const AccountPage = () => {
   };
 
   const handleSignOut = async () => {
-   
+    // dispatch(logout());
   };
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -66,33 +78,63 @@ const AccountPage = () => {
             </Button>
           </div>
           <form onSubmit={handleUpdateProfile} className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-900 mb-1 block">Name</label>
-              <Input
-                value={profileData.name}
-                onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                disabled={!isEditing}
-                className="border-gray-300 rounded-md text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-900 mb-1 block">Email</label>
-              <Input
-                value={profileData.email}
-                onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                disabled={!isEditing}
-                className="border-gray-300 rounded-md text-sm"
-              />
-            </div>
-            {isEditing && (
-              <Button
-                type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white rounded-md py-2 px-4 text-sm font-medium"
-              >
-                Save Changes
-              </Button>
-            )}
-          </form>
+  <div>
+    <label className="text-sm font-medium text-gray-900 mb-1 block">Username</label>
+    <Input
+      value={profileData.username}
+      onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
+      disabled={!isEditing}
+      className="border-gray-300 rounded-md text-sm"
+    />
+  </div>
+  <div>
+    <label className="text-sm font-medium text-gray-900 mb-1 block">First Name</label>
+    <Input
+      value={profileData.firstName}
+      onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
+      disabled={!isEditing}
+      className="border-gray-300 rounded-md text-sm"
+    />
+  </div>
+  <div>
+    <label className="text-sm font-medium text-gray-900 mb-1 block">Last Name</label>
+    <Input
+      value={profileData.lastName}
+      onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
+      disabled={!isEditing}
+      className="border-gray-300 rounded-md text-sm"
+    />
+  </div>
+  <div>
+    <label className="text-sm font-medium text-gray-900 mb-1 block">Official Email</label>
+    <Input
+      type="email"
+      value={profileData.officialEmail}
+      onChange={(e) => setProfileData({ ...profileData, officialEmail: e.target.value })}
+      disabled={!isEditing}
+      className="border-gray-300 rounded-md text-sm"
+    />
+  </div>
+  <div>
+    <label className="text-sm font-medium text-gray-900 mb-1 block">Primary Phone</label>
+    <Input
+      value={profileData.primaryPhone}
+      onChange={(e) => setProfileData({ ...profileData, primaryPhone: e.target.value })}
+      disabled={!isEditing}
+      className="border-gray-300 rounded-md text-sm"
+    />
+  </div>
+
+  {isEditing && (
+    <Button
+      type="submit"
+      className="bg-red-600 hover:bg-red-700 text-white rounded-md py-2 px-4 text-sm font-medium"
+    >
+      Save Changes
+    </Button>
+  )}
+</form>
+
         </div>
 
         {/* Actions Section */}
