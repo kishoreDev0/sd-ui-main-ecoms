@@ -99,11 +99,11 @@ const StepperForm: React.FC<StepperFormProps> = ({
             placeholder="Enter full address: street, city, state..."
             className={cn(
               "w-full resize-none border border-black focus:border-black focus:ring-0 bg-white text-black placeholder-gray-400",
-              errors.address && "border-red-600 focus:border-red-600"
+              errors.address && "border-blue-600 focus:border-blue-600"
             )}
           />
           {errors.address && (
-            <p className="text-sm text-red-600">{errors.address}</p>
+            <p className="text-sm text-blue-600">{errors.address}</p>
           )}
         </div>
       ),
@@ -192,7 +192,7 @@ const StepperForm: React.FC<StepperFormProps> = ({
               <Button
                 onClick={handleFinalSubmit}
                 disabled={isSubmitting}
-                className="bg-black text-white hover:bg-gray-800"
+                className="bg-black text-white hover:bg-gray-600"
               >
                 {isSubmitting ? (
                   <div className="flex items-center space-x-2">
@@ -209,7 +209,7 @@ const StepperForm: React.FC<StepperFormProps> = ({
             ) : (
               <Button
                 onClick={handleNext}
-                className="bg-black text-white hover:bg-gray-800"
+                className="bg-black text-white hover:bg-gray-600"
               >
                 Next
                 <ChevronRight className="ml-1 w-4 h-4" />

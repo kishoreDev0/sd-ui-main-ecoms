@@ -4,7 +4,7 @@ import {
   BrowserRouter,
   useLocation,
 } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import store from './store';
 import './App.css';
 import { AdminHeader } from './components/layouts/AdminHeader';
@@ -19,7 +19,7 @@ import GitHubAuthSuccess from './components/login/githubSignIn';
 import Loader from './components/loader/loader';
 import CartPage from './pages/cart/CartPage';
 import NotFound from './pages/notfound/NotFound';
-import WishlistPage from './pages/product/WishlistPage';
+import WishlistPage from './pages/wishlist/WishlistPage';
 import ProductDetailPage from './pages/product/ProductDetailPage';
 import ProductsPage from './pages/product/ProductsPage';
 import HomePage from './pages/home/HomePage';
@@ -42,6 +42,8 @@ import { CategoryList } from './components/admin/category/CategoryList';
 import { CartList } from './components/admin/Carts/CartsList';
 import { WishlistList } from './components/admin/Wishlists/WishlistsList';
 import AccountPage from './pages/ui/AccountPage';
+import ContactUs from './pages/contactUs/index';
+import { useEffect } from 'react';
 
 // Helper to safely parse JSON
 const getUserFromLocalStorage = () => {
@@ -58,6 +60,7 @@ const getUserFromLocalStorage = () => {
 // Component to wrap routes and apply conditional layout
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const pathname = location.pathname;
   const isAdminLogin = pathname === '/admin/login';
   const isAdminRoute = pathname.startsWith('/admin');
@@ -66,6 +69,9 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 
   // Don't show any layout for admin login
   if (isAdminLogin) return <>{children}</>;
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, [dispatch,pathname]);
 
   return (
     <>
@@ -130,6 +136,7 @@ const App = () => {
                         <Route path="/wishlist" element={<WishlistPage />} />
                         <Route path="/account" element={<AccountPage />} />
                         <Route path="/cart" element={<CartPage />} />
+                        <Route path="/contact-us" element={<ContactUs />} />
                         <Route path="*" element={<NotFound />} />
                       </Routes>
                     </LayoutWrapper>

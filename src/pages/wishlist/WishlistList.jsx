@@ -111,11 +111,11 @@ const WishlistList = () => {
   const getStatusBadgeColor = (status) => {
     switch (status) {
       case "active":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-600"
       case "inactive":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-600"
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-600"
     }
   }
 

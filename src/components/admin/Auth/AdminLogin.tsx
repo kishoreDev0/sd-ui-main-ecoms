@@ -97,7 +97,7 @@ export const AdminLogin: React.FC = () => {
 
           <Button 
             type="submit" 
-            className="w-full h-11 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+            className="w-full h-11 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-600"
             disabled={isLoading}
           >
             {isLoading ? 'Signing in...' : 'Sign In'}

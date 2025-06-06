@@ -36,7 +36,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon: Icon, t
                 ) : (
                   <ArrowDownRight className="h-3 w-3 text-red-500 mr-1" />
                 )}
-                <span className={trend === "up" ? "text-green-600" : "text-red-600"}>{change}</span>
+                <span className={trend === "up" ? "text-green-600" : "text-blue-600"}>{change}</span>
                 {/* <span className="ml-1">{description}</span> */}
               </div>
             </CardContent>

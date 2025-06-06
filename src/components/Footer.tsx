@@ -83,7 +83,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-white">Customer Service</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="#" className="text-sm text-gray-400 hover:text-red-500 transition-colors">
+                <Link to="/contact-us" className="text-sm text-gray-400 hover:text-red-500 transition-colors">
                   Contact Us
                 </Link>
               </li>
@@ -116,12 +116,12 @@ export function Footer() {
                 name="email"
                 value={formData.email}
                 onChange={(e)=> handleChange(e)}
-                className="p-2 text-sm rounded-md bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors"
+                className="p-2 text-sm rounded-md bg-gray-600 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors"
               />
               <button
                 type="submit"
                 onClick={(e) => handleSubscribe(e)}
-                className="p-2 text-sm font-medium rounded-md bg-red-600 hover:bg-red-700 text-white transition-colors"
+                className="p-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-red-700 text-white transition-colors"
               >
                 Subscribe
               </button>
@@ -129,7 +129,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div className="mt-12 pt-6 border-t border-gray-600 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-xs text-gray-400">
             © {new Date().getFullYear()} Deflux. All rights reserved.
           </p>

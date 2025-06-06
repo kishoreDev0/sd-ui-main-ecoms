@@ -85,12 +85,12 @@ const WishlistPage = () => {
 
         {filterProd && filterProd === undefined ? (
           <div className="text-center py-16 bg-white rounded-md shadow-sm">
-            <Heart className="w-12 h-12 mx-auto text-red-600 mb-4" />
+            <Heart className="w-12 h-12 mx-auto text-blue-600 mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Your Wishlist is Empty</h2>
             <p className="text-gray-600 mb-6 text-sm">
               Browse our collection and add your favorite items to your wishlist.
             </p>
-            <Button asChild className="bg-red-600 hover:bg-red-700 text-white rounded-md py-2 px-6 text-sm font-medium">
+            <Button asChild className="bg-blue-600 hover:bg-red-700 text-white rounded-md py-2 px-6 text-sm font-medium">
               <Link to="/products">Browse Products</Link>
             </Button>
           </div>
@@ -120,7 +120,7 @@ const WishlistPage = () => {
                       </Link>
                       <Link
                         to={`/products/${item.id}`}
-                        className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors"
+                        className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors"
                       >
                         {item.name}
                       </Link>
@@ -135,14 +135,14 @@ const WishlistPage = () => {
                     <div className="md:col-span-2 flex flex-wrap gap-3">
                       <Button
                         onClick={() => handleAddToCart(item)}
-                        className="bg-red-600 hover:bg-red-700 text-white rounded-md py-2 px-4 text-sm font-medium"
+                        className="bg-blue-600 hover:bg-red-700 text-white rounded-md py-2 px-4 text-sm font-medium"
                       >
                         <ShoppingCart className="h-4 w-4 mr-2" /> Add to Cart
                       </Button>
                       <Button
                         variant="outline"
                         onClick={(e) => handleToggleWishlist(e, item.id)}
-                        className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-md py-2 px-4 text-sm font-medium"
+                        className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-md py-2 px-4 text-sm font-medium"
                       >
                         <Trash className="h-4 w-4 mr-2" /> Remove
                       </Button>
@@ -155,7 +155,7 @@ const WishlistPage = () => {
               <Button
                 asChild
                 variant="outline"
-                className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-md py-2 px-4 text-sm font-medium"
+                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-md py-2 px-4 text-sm font-medium"
               >
                 <Link to="/products">Continue Shopping</Link>
               </Button>

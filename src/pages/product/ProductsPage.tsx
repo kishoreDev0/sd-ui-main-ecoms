@@ -68,7 +68,10 @@ const ProductsPage = () => {
 
   const handleToggleWishlist = async (e: { preventDefault: () => void }, productId: number) => {
     e.preventDefault();
-    console.log(productId);
+    if (!user) {
+      toast.warning("Please login first!");
+      return;
+    }
 
     try {
       const response = await dispatch(
@@ -125,7 +128,7 @@ const ProductsPage = () => {
                     name="category"
                     checked={selectedCategory === "all"}
                     onChange={() => setSelectedCategory("all")}
-                    className="h-4 w-4 text-red-600 focus:ring-red-600"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-600"
                   />
                   <label htmlFor="all" className="ml-2 text-sm text-gray-700">All Categories</label>
                 </div>
@@ -137,7 +140,7 @@ const ProductsPage = () => {
                       name="category"
                       checked={selectedCategory === String(category.id)}
                       onChange={() => setSelectedCategory(String(category.id))}
-                      className="h-4 w-4 text-red-600 focus:ring-red-600"
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-600"
                     />
                     <label className="ml-2 text-sm text-gray-700 capitalize">{category?.categoryName ?? ""}</label>
                   </div>
@@ -168,7 +171,7 @@ const ProductsPage = () => {
             <div className="bg-white rounded-md p-4 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Sort By</h2>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="border-gray-300 rounded-md focus:ring-red-600">
+                <SelectTrigger className="border-gray-300 rounded-md focus:ring-blue-600">
                   <SelectValue placeholder="Featured" />
                 </SelectTrigger>
                 <SelectContent>

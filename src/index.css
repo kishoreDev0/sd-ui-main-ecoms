@@ -134,3 +134,9 @@ h2{font-weight: 400!important;}
 .prodiv1,.prodiv2{width: 48%;}
 .promain{display: flex; gap: 2%;}
 .bg-1slight-white{background-color: #F8FAFC;}
+.logo{width: 60%;}
+.w-30{width: 20%;}
+.hood > .h-10{height: auto!important;}
+.nonshow{display: none;}
+.wi-40{width: 40%;}
+.wi-60{width: 60%;}

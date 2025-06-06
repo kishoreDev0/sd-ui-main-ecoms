@@ -94,7 +94,7 @@ export const products: Product[] = [
     price: 799.99,
     images: [
       "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?q=80&w=1000",
-      "https://images.unsplash.com/photo-1639800076962-4a86c206429c?q=80&w=1000",
+      "https://images.unsplash.com/photo-1639600076962-4a86c206429c?q=80&w=1000",
     ],
     category: "homeware",
     features: [

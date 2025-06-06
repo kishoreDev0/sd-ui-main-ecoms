@@ -264,7 +264,7 @@ const CartPage = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <MapPin className="w-12 h-12 mx-auto text-red-600 mb-4" />
+              <MapPin className="w-12 h-12 mx-auto text-blue-600 mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Delivery Address</h3>
               <p className="text-gray-600 text-sm">Please provide your complete delivery address</p>
             </div>
@@ -285,7 +285,7 @@ const CartPage = () => {
                   } focus:outline-none focus:ring-2`}
                 />
                 {errors.address && (
-                  <p className="text-red-600 text-sm mt-1">{errors.address}</p>
+                  <p className="text-blue-600 text-sm mt-1">{errors.address}</p>
                 )}
               </div>
             </div>
@@ -296,7 +296,7 @@ const CartPage = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <MessageSquare className="w-12 h-12 mx-auto text-red-600 mb-4" />
+              <MessageSquare className="w-12 h-12 mx-auto text-blue-600 mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Order Notes</h3>
               <p className="text-gray-600 text-sm">Add any special instructions for your order</p>
             </div>
@@ -317,7 +317,7 @@ const CartPage = () => {
                   } focus:outline-none focus:ring-2`}
                 />
                 {errors.notes && (
-                  <p className="text-red-600 text-sm mt-1">{errors.notes}</p>
+                  <p className="text-blue-600 text-sm mt-1">{errors.notes}</p>
                 )}
               </div>
             </div>
@@ -404,7 +404,7 @@ const CartPage = () => {
                             isCompleted
                               ? 'bg-green-600 text-white'
                               : isActive
-                              ? 'bg-red-600 text-white'
+                              ? 'bg-blue-600 text-white'
                               : 'bg-gray-200 text-gray-600'
                           }`}
                         >
@@ -453,7 +453,7 @@ const CartPage = () => {
               {currentStep < totalSteps ? (
                 <Button
                   onClick={handleNext}
-                  className="bg-red-600 hover:bg-red-700 text-white"
+                  className="bg-blue-600 hover:bg-red-700 text-white"
                 >
                   Next
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -486,12 +486,12 @@ const CartPage = () => {
 
           {(!filterProd || filterProd.length === 0) ? (
             <div className="text-center py-16 bg-white rounded-md shadow-sm">
-              <ShoppingCart className="w-12 h-12 mx-auto text-red-600 mb-4" />
+              <ShoppingCart className="w-12 h-12 mx-auto text-blue-600 mb-4" />
               <h2 className="text-xl font-semibold text-gray-900 mb-2">Your Cart is Empty</h2>
               <p className="text-gray-600 mb-6 text-sm">
                 Looks like you haven't added any items to your cart yet.
               </p>
-              <Button asChild className="bg-red-600 hover:bg-red-700 text-white rounded-md py-2 px-6 text-sm font-medium">
+              <Button asChild className="bg-blue-600 hover:bg-red-700 text-white rounded-md py-2 px-6 text-sm font-medium">
                 <Link to="/products">Start Shopping</Link>
               </Button>
             </div>
@@ -523,13 +523,13 @@ const CartPage = () => {
                         <div>
                           <Link
                             to={`/products/${item.id}`}
-                            className="text-sm font-medium text-gray-900 hover:text-red-600 transition-colors"
+                            className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors"
                           >
                             {item.name}
                           </Link>
                           <button
                             onClick={() => handleRemoveFromCart(item.id)}
-                            className="text-sm text-red-600 hover:text-red-700 mt-1 flex items-center"
+                            className="text-sm text-blue-600 hover:text-red-700 mt-1 flex items-center"
                           >
                             <Trash className="w-4 h-4 mr-1" /> Remove
                           </button>
@@ -571,7 +571,7 @@ const CartPage = () => {
                   <Button
                     asChild
                     variant="outline"
-                    className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-md py-2 px-4 text-sm font-medium"
+                    className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-md py-2 px-4 text-sm font-medium"
                   >
                     <Link to="/products">
                       <ArrowLeft className="h-4 w-4 mr-2" />
@@ -581,7 +581,7 @@ const CartPage = () => {
                   <Button
                     variant="outline"
                     onClick={clearCart}
-                    className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-md py-2 px-4 text-sm font-medium"
+                    className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-md py-2 px-4 text-sm font-medium"
                     disabled={!filterProd || filterProd.length === 0}
                   >
                     <Trash className="h-4 w-4 mr-2" /> Clear Cart
@@ -622,13 +622,13 @@ const CartPage = () => {
                       <label className="text-sm font-medium text-gray-900 mb-1 block">Promo Code</label>
                       <div className="flex gap-2">
                         <Input placeholder="Enter code" className="flex-1 border-gray-300 rounded-md" />
-                        <Button variant="outline" className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-md">
+                        <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-md">
                           Apply
                         </Button>
                       </div>
                     </div>
                     <Button
-                      className="w-full bg-red-600 hover:bg-red-700 text-white rounded-md py-3 text-sm font-medium"
+                      className="w-full bg-blue-600 hover:bg-red-700 text-white rounded-md py-3 text-sm font-medium"
                       onClick={handleCheckout}
                       disabled={!filterProd || filterProd.length === 0}
                     >
@@ -636,7 +636,7 @@ const CartPage = () => {
                     </Button>
                     <p className="text-center text-sm text-gray-600 mt-4">
                       By proceeding, you agree to our
-                      <a href="#" className="text-red-600 hover:underline ml-1">
+                      <a href="#" className="text-blue-600 hover:underline ml-1">
                         Terms of Service
                       </a>
                     </p>

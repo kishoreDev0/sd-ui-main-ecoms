@@ -91,7 +91,7 @@
 //                   <TableCell>{product.category}</TableCell>
 //                   <TableCell>${product.price}</TableCell>
 //                   <TableCell>
-//                     <span className={product.stock === 0 ? 'text-red-600' : 'text-gray-900'}>
+//                     <span className={product.stock === 0 ? 'text-blue-600' : 'text-gray-900'}>
 //                       {product.stock}
 //                     </span>
 //                   </TableCell>
@@ -108,7 +108,7 @@
 //                       <Button variant="ghost" size="icon">
 //                         <Edit className="h-4 w-4" />
 //                       </Button>
-//                       <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700">
+//                       <Button variant="ghost" size="icon" className="text-blue-600 hover:text-red-700">
 //                         <Trash2 className="h-4 w-4" />
 //                       </Button>
 //                     </div>
@@ -132,7 +132,7 @@
 //                       <TableCell>{product.category?.id}</TableCell>
 //                       <TableCell>${product.price}</TableCell>
 //                       <TableCell>
-//                         <span className={product.noOfStock === 0 ? 'text-red-600' : 'text-gray-900'}>
+//                         <span className={product.noOfStock === 0 ? 'text-blue-600' : 'text-gray-900'}>
 //                           {product.noOfStock}
 //                         </span>
 //                       </TableCell>
@@ -151,7 +151,7 @@
 //                           >
 //                             <Edit className="h-4 w-4" />
 //                           </Button>
-//                           <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700">
+//                           <Button variant="ghost" size="icon" className="text-blue-600 hover:text-red-700">
 //                             <Trash2 className="h-4 w-4" />
 //                           </Button>
 //                         </div>
@@ -366,7 +366,7 @@ export const ProductsList: React.FC = () => {
                   <TableCell>${product?.price}</TableCell>
                    <TableCell>{product?.totalNoOfStock}</TableCell>
                   <TableCell>
-                    <span className={product?.noOfStock === 0 ? 'text-red-600' : 'text-gray-900'}>
+                    <span className={product?.noOfStock === 0 ? 'text-blue-600' : 'text-gray-900'}>
                       {product?.noOfStock}
                     </span>
                   </TableCell>
@@ -386,7 +386,7 @@ export const ProductsList: React.FC = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-red-600 hover:text-red-700"
+                        className="text-blue-600 hover:text-red-700"
                         onClick={() => handleDelete(product.id)}
                       >
                         <Trash2 className="h-4 w-4" />

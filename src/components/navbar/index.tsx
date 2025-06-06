@@ -91,7 +91,7 @@ const Navbar: React.FC = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white shadow-md text-gray-800'
+          ? 'bg-white shadow-md text-gray-600'
           : 'bg-gray-900 text-white'
       }`}
     >
@@ -117,7 +117,7 @@ const Navbar: React.FC = () => {
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                     activePage === page
                       ? isScrolled
-                        ? 'bg-gray-200 text-gray-800'
+                        ? 'bg-gray-200 text-gray-600'
                         : 'bg-gray-700 text-white'
                       : isScrolled
                         ? 'text-gray-600 hover:bg-gray-200'
@@ -170,7 +170,7 @@ const Navbar: React.FC = () => {
                 } ${
                   isScrolled
                     ? 'bg-white ring-1 ring-black ring-opacity-5'
-                    : 'bg-gray-800'
+                    : 'bg-gray-600'
                 }`}
               >
                 <p
@@ -260,7 +260,7 @@ const Navbar: React.FC = () => {
               className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
                 activePage === page
                   ? isScrolled
-                    ? 'bg-gray-200 text-gray-800'
+                    ? 'bg-gray-200 text-gray-600'
                     : 'bg-gray-700 text-white'
                   : isScrolled
                     ? 'text-gray-600 hover:bg-gray-200'

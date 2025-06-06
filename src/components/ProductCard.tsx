@@ -76,7 +76,7 @@ export function ProductCard({ id, name, price, image, inStock = true,isWishliste
         {isWishlisted ? (
           <HeartIcon fill="currentColor" className="text-black-600 z-0 w-6 h-6" />
         ) : (
-          <Heart className="text-gray-400 w-6 h-6 hover:text-red-600 z-0" />
+          <Heart className="text-gray-400 w-6 h-6 hover:text-blue-600 z-0" />
         )}
         
       </button>

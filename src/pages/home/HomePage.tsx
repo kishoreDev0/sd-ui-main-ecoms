@@ -11,7 +11,7 @@ import { fetchAllProducts } from "@/store/action/products";
 import { Category } from "@/store/types/categort";
 import { fetchAllCategorys } from "@/store/action/category";
 import { HttpStatusCode } from "@/constants";
-import { fetchWishlistByUserId, moveWishlistlist, updateWishlistlist } from "@/store/action/wishlist";
+import { fetchWishlistByUserId, updateWishlistlist } from "@/store/action/wishlist";
 import { toast } from "react-toastify";
 
 const HomePage = () => {
@@ -29,7 +29,10 @@ const HomePage = () => {
  
   const handleToggleWishlist = async (e: { preventDefault: () => void }, productId: number) => {
     e.preventDefault();
-    console.log(productId);
+    if(!user?.id ){
+      toast.warning("Please login first")
+      return ;
+    }
     if(user?.id){
           try {
       const response = await dispatch(
@@ -72,14 +75,14 @@ const HomePage = () => {
             Discover premium products crafted for elegance and quality.
           </p>
           <div className="flex gap-4">
-            <Button asChild size="lg" className="bg-red-600 hover:bg-red-700 rounded-md text-white font-medium">
+            <Button asChild size="lg" className="bg-blue-600 hover:bg-red-700 rounded-md text-white font-medium">
               <Link to="/products">Shop Now</Link>
             </Button>
             <Button
               asChild
               size="lg"
               variant="outline"
-              className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-md font-medium"
+              className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-md font-medium"
             >
               <Link to="/products">Explore More</Link>
             </Button>
@@ -103,7 +106,7 @@ const HomePage = () => {
                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                       <div className="text-center text-white">
                         <h2 className="text-2xl md:text-3xl font-bold mb-4">{title}</h2>
-                        <Button asChild variant="secondary" className="bg-red-600 hover:bg-red-700 text-white rounded-md">
+                        <Button asChild variant="secondary" className="bg-blue-600 hover:bg-red-700 text-white rounded-md">
                           <Link to="/products">Discover {title}</Link>
                         </Button>
                       </div>
@@ -112,8 +115,8 @@ const HomePage = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-2 bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-full" />
-            <CarouselNext className="right-2 bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-full" />
+            <CarouselPrevious className="left-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-full" />
+            <CarouselNext className="right-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-full" />
           </Carousel>
         </div>
       </section>
@@ -149,7 +152,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
-            <Link to="/products" className="flex items-center text-red-600 hover:text-red-700 font-medium">
+            <Link to="/products" className="flex items-center text-blue-600 hover:text-red-700 font-medium">
               View All <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
