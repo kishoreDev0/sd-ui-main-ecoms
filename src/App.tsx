@@ -47,6 +47,7 @@ import { useEffect } from 'react';
 import {StaticList} from './components/admin/static/StaticList';
 import { OrderList } from './components/admin/order/OrderList';
 import { StaticPages } from './pages/static/index';
+import { MobileFooterBar } from './components/layouts/MobileFooterBar';
 
 // Helper to safely parse JSON
 const getUserFromLocalStorage = () => {
@@ -76,18 +77,16 @@ useEffect(() => {
   window.scrollTo(0, 0);
 }, [dispatch,pathname]);
 
-  return (
-    <>
-      {!isAdminRoute || !isAdmin ? (
-        <Navigation />
-      ) : (
-        <AdminHeader />
-      )}
-      {children}
-      {!isAdminRoute && <Footer />}
-      {!isAdminRoute && <Chatbot />}
-    </>
-  );
+ return (
+  <>
+    {!isAdminRoute || !isAdmin ? <Navigation /> : <AdminHeader />}
+    {children}
+    {!isAdminRoute && <Footer />}
+    {!isAdminRoute && <Chatbot />}
+    {!isAdminRoute && <MobileFooterBar />} {/* 👈 Mobile footer only on non-admin routes */}
+  </>
+);
+
 };
 
 

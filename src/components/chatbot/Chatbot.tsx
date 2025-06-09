@@ -57,11 +57,11 @@ export function Chatbot() {
   }
 
   return (
-    <Card className="fixed  bottom-6 right-6 w-80 md:w-96 h-96 shadow-lg border border-luxury-gold/20 overflow-hidden z-50">
+    <Card className="fixed  bottom-15 right-6 w-80 md:w-96 h-96 shadow-lg border border-luxury-gold/20 overflow-hidden z-50">
       {/* Header */}
       <div className="bg-luxury-gold bg-black text-white p-3 flex justify-between items-center">
         <h3 className="font-medium">Deflux Assistant</h3>
-        <Button size="icon" variant="ghost" onClick={toggleChat} className="h-7 w-7 text-white hover:bg-luxury-gold/80">
+        <Button size="icon" variant="ghost" onClick={toggleChat} className="h-7 w-7 text-white hover:bg-luxury-gold/80 ">
           <X className="h-4 w-4" />
         </Button>
       </div>

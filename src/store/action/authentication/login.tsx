@@ -20,16 +20,15 @@ export const loginUser = createAsyncThunk(
     try {
       const authAPI = new AuthAPI(api);
       const response = await authAPI.login(email, password);
-      console.log(response)
 
       if (response.statusCode === HttpStatusCode.OK) {
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.setItem('token', response.data.session.token);
 
-        return response.data;
+        return response;
       } else {
-        return rejectWithValue(response.data.message || 'Login failed');
+        return response
       }
     } catch (error) {
       return rejectWithValue(error);
