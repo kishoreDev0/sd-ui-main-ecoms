@@ -35,3 +35,10 @@ export interface UserState {
   loading: boolean;
   error: string | null;
 }
+
+export interface CreateUserPayload {
+  firstName: string;
+  lastName?: string;
+  officialEmail?: string;
+  primaryPhone?: string | null;
+}

@@ -15,15 +15,21 @@ export class InviteUserAPI {
   inviteUser = async (
     name: string,
     email: string,
-    role: string,
+    phone:number,
+    role: number,
+    createdBy:number
   ): Promise<AxiosResponse<InviteUserResponse>> => {
     try {
-      const response = await this.api.get(INVITE_USER, {
-        params: {
-          name,
-          email,
-          role,
-        },
+      const response = await this.api.post(INVITE_USER, {
+        
+          firstName:name,
+          officialEmail:email,
+          primaryPhone:phone,
+          roleId:role,
+          createdBy:{
+            id: createdBy
+          },
+        
       });
 
       return response;

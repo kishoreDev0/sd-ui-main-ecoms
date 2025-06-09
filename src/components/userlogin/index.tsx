@@ -16,11 +16,13 @@ import { AppDispatch } from "@/store";
 import { loginUser } from "@/store/action/authentication/login";
 import { toast } from "react-toastify";
 import { initializeHttpClient } from "@/axios-setup/axios-interceptor";
-import { Rocket, User, Mail, Lock } from "lucide-react";
-import { DialogTrigger } from "../admin/ui/dialog";
+import { Rocket, User, Mail, Lock, Phone } from "lucide-react";
+import { inviteUser } from "@/store/action/authentication/inviteUser";
+import { HttpStatusCode } from "@/constants";
 
 export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
@@ -36,27 +38,48 @@ export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange
         api: httpClient,
       })
     ).unwrap();
+    console.log("Login result:", result);
 
-    if (result) {
-      toast.success('Login successful!');
-      onOpenChange(false)
-      navigate('/');
+    if (result.statusCode === HttpStatusCode.OK) {
+      toast.success("Login successful!");
+      onOpenChange(false);
+      navigate("/");
     } else {
-      toast.error('Login failed. Please check your credentials.');
+      toast.error("Login failed. Please check your credentials.");
     }
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registering with", { username, email, password });
+    console.log("Registering with", { username, email, phone, password });
+    try{
+      const response = await dispatch(inviteUser({
+        name: username,
+        email,
+        phone: parseInt(phone, 10),
+        role: 2,
+        createdBy: 1,
+        api: httpClient
+      }
+      )).unwrap();
+    
+      if (response) {
+        toast.success("Registration successful! Please check your email for confirmation.");
+        onOpenChange(false);
+        navigate("/");
+      } else {
+        toast.error("Registration failed. Please try again.");
+      }
+    
+    }catch(error){
+      toast.error("Registration failed. Please try again.");
+    }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}  >
-      <div className={`fixed inset-0 flex items-center justify-center min-h-screen ${open ? 'show' : 'nonshow'}`}>
-        
-        <DialogContent className="max-w-lg w-full bg-white rounded-xl shadow-lg p-0 flex overflow-hidden  animate-glow">
-          {/* Orbiting Glow Effect */}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <div className={`fixed inset-0 flex items-center justify-center min-h-screen ${open ? "show" : "nonshow"}`}>
+        <DialogContent className="max-w-lg w-full bg-white rounded-xl shadow-lg p-0 flex overflow-hidden animate-glow">
           <div className="absolute inset-0 pointer-events-none border-2 border-blue-200 rounded-xl animate-orbit"></div>
           <style>
             {`
@@ -80,14 +103,14 @@ export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange
           </style>
           <Tabs defaultValue="login" className="w-full flex hood">
             <TabsList className="flex flex-col w-1/3 bg-gray-50 p-4 rounded-l-xl border-r border-gray-200">
-              <TabsTrigger 
-                value="login" 
+              <TabsTrigger
+                value="login"
                 className="py-3 text-lg font-medium text-left px-4 rounded-md mb-2 data-[state=active]:bg-blue-200 data-[state=active]:text-blue-600 text-gray-600 hover:bg-blue-100 flex items-center gap-2"
               >
                 <Rocket className="w-5 h-5" /> Login
               </TabsTrigger>
-              <TabsTrigger 
-                value="register" 
+              <TabsTrigger
+                value="register"
                 className="py-3 text-lg font-medium text-left px-4 rounded-md data-[state=active]:bg-blue-200 data-[state=active]:text-blue-600 text-gray-600 hover:bg-blue-100 flex items-center gap-2"
               >
                 <User className="w-5 h-5" /> Sign Up
@@ -95,6 +118,7 @@ export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange
             </TabsList>
 
             <div className="w-2/3 p-6 relative z-10">
+              {/* LOGIN */}
               <TabsContent value="login">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-semibold text-gray-600">Access Your Space</DialogTitle>
@@ -126,8 +150,8 @@ export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange
                     />
                   </div>
                   <DialogFooter>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-md font-medium text-sm hover:pulse"
                     >
                       Launch
@@ -136,6 +160,7 @@ export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange
                 </form>
               </TabsContent>
 
+              {/* REGISTER (NO PASSWORD) */}
               <TabsContent value="register">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-semibold text-gray-600">Join the Mission</DialogTitle>
@@ -159,7 +184,7 @@ export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange
                     <Mail className="w-5 h-5 text-gray-500" />
                     <Input
                       type="email"
-                      placeholder="Email or Mobile Number"
+                      placeholder="Email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -167,19 +192,19 @@ export function UserDialog({ open, onOpenChange }: { open: boolean; onOpenChange
                     />
                   </div>
                   <div className="flex items-center gap-2">
-                    <Lock className="w-5 h-5 text-gray-500" />
+                    <Phone className="w-5 h-5 text-gray-500" />
                     <Input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      type="tel"
+                      placeholder="Phone Number"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                       required
-                      className="bg-white border-gray-300 text-gray-600 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 rounded-md py-2.5 text-sm"
+                      className="bg-white border-gray-300 text-gray-600 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 rounded-md text-sm"
                     />
                   </div>
                   <DialogFooter>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-md font-medium text-sm hover:pulse"
                     >
                       Enlist

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User, AuthState } from '../../types/authentication/login';
 import { loginUser } from '@/store/action/authentication/login';
+import { HttpStatusCode } from '@/constants';
 
 export const AUTH_STORAGE_KEYS = {
   IS_AUTHENTICATED: 'isAuthenticated',
@@ -56,14 +57,18 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log(action.payload)
-        const token = localStorage.getItem('token')
+          console.log(action.payload)
+       if(action.payload.statusCode === HttpStatusCode.OK) {
+              
+
+         const token = localStorage.getItem('token')
         state.isLoading = false;
-        state.user = action.payload.user;
+        state.user = action.payload.data.user;
         state.isAuthenticated = true;
-        state.isAdmin = action.payload.user.role.id === 1;
+        state.isAdmin = action.payload.data.user.role.id === 1;
         state.error = null;
-        state.token = action.payload.session ?? token ?? ''
+        state.token = action.payload.data.session ?? token ?? ''
+       }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

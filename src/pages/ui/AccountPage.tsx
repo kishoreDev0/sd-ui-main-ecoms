@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { LogOut, UserPlus, Key, Send, User, Mail, Phone, Edit3, X, Settings, Shield } from "lucide-react";
-import { useAppSelector } from "@/store";
+import { AppDispatch, useAppSelector } from "@/store";
 import { RootState } from "@/store/reducer";
+import { useDispatch } from "react-redux";
+import { logout } from "@/store/slices/authentication/login";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // Simulated data for demo
 const mockUser = {
@@ -23,6 +27,8 @@ interface UserType {
 const AccountPage = () => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showSignModal, setShowSignModal] = useState(false);
+
   const [inviteEmail, setInviteEmail] = useState("");
   const [resetEmail, setResetEmail] = useState(mockUser?.officialEmail || "");
   const [profileData, setProfileData] = useState<UserType>({
@@ -36,6 +42,8 @@ const AccountPage = () => {
   const { user} = useAppSelector((state:RootState) => state.auth)
 
   const [isEditing, setIsEditing] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const handleInviteUser = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,9 +58,19 @@ const AccountPage = () => {
     setShowResetModal(false);
   };
 
-  const handleSignOut = () => {
-    console.log('Signing out...');
-  };
+  const signOut = () => {
+    setShowSignModal(true);
+  }
+
+    const handleSignOut = async () => {
+      try {
+        await dispatch(logout());
+        toast.success("Signed out successfully");
+        navigate("/");
+      } catch (error) {
+        toast.error("Error signing out");
+      }
+    };
 
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,7 +249,7 @@ const AccountPage = () => {
                   <h3 className="font-semibold text-gray-900 mb-2">Sign Out</h3>
                   <p className="text-sm text-gray-600 mb-4">Sign out of your account</p>
                   <button
-                    onClick={handleSignOut}
+                    onClick={signOut}
                     className="w-full bg-blue-600 hover:bg-red-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200"
                   >
                     Sign Out
@@ -244,7 +262,7 @@ const AccountPage = () => {
 
         {/* Invite User Modal */}
         {showInviteModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg w-full max-w-md shadow-2xl">
               <div className="px-6 py-4 border-b">
                 <div className="flex items-center gap-3">
@@ -289,7 +307,7 @@ const AccountPage = () => {
 
         {/* Reset Password Modal */}
         {showResetModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg w-full max-w-md shadow-2xl">
               <div className="px-6 py-4 border-b">
                 <div className="flex items-center gap-3">
@@ -331,6 +349,46 @@ const AccountPage = () => {
             </div>
           </div>
         )}
+
+        {/* signout modal */}
+        {
+          showSignModal &&(
+              <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg w-full max-w-md shadow-2xl">
+              <div className="px-6 py-4 border-b">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <Key className="w-4 h-4 text-white" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Reset Password</h2>
+                </div>
+              </div>
+              
+              <div className="px-6 py-3">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-lg font-medium text-gray-700 mb-2">Would you like to sign out?</label>
+                  </div>
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      onClick={handleSignOut}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                    >
+                      <Send className="h-4 w-4" /> Send Reset Link
+                    </button>
+                    <button
+                      onClick={() => setShowSignModal(false)}
+                      className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-600 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          )
+        }
       </div>
     </div>
   );

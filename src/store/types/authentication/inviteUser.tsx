@@ -4,8 +4,17 @@ export interface InviteUserState {
   error: string | null;
 }
 
+// export interface InviteUserRequest {
+//   name: string;
+//   email: string;
+//   role: string;
+// }
+
 export interface InviteUserRequest {
   name: string;
+  phone: number;
   email: string;
-  role: string;
+  role: number;
+  createdBy: number
 }
+

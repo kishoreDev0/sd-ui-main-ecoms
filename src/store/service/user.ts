@@ -7,4 +7,6 @@ export class UserAPI {
 
   getAllUsers = async () =>
     axiosInstance.get(`${ApiVersions.V1}${UserRoutes.USERS}`);
+
+
 }

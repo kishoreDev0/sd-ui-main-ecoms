@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { store } from '@/store'; // Redux store
-import { toast } from 'react-toastify'; // Or use your custom snackbar
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,

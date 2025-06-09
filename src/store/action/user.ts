@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { UserAPI } from '../service/user';
-import { User } from '../types/user'; 
+import { CreateUserPayload, User } from '../types/user'; 
 import { AxiosResponse } from '../types/response.types'; 
 
 const userAPI = new UserAPI(); // Create instance of UserAPI
@@ -40,3 +40,4 @@ export const fetchUserById = createAsyncThunk(
     }
   },
 );
+
