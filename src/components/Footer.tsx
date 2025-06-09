@@ -2,7 +2,6 @@ import { HttpStatusCode } from "@/constants";
 import { AppDispatch, useAppSelector } from "@/store";
 import { subscribeOrder } from "@/store/action/order";
 import { RootState } from "@/store/reducer";
-import { Toast } from "@radix-ui/react-toast";
 import { ChangeEvent, MouseEvent as ReactMouseEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -88,12 +87,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-sm text-gray-400 hover:text-red-500 transition-colors">
+                <Link to="/static/1" className="text-sm text-gray-400 hover:text-red-500 transition-colors">
                   Shipping Policy
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-sm text-gray-400 hover:text-red-500 transition-colors">
+                <Link to="/static/2" className="text-sm text-gray-400 hover:text-red-500 transition-colors">
                   Returns & Exchanges
                 </Link>
               </li>

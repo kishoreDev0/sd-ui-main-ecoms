@@ -44,6 +44,9 @@ import { WishlistList } from './components/admin/Wishlists/WishlistsList';
 import AccountPage from './pages/ui/AccountPage';
 import ContactUs from './pages/contactUs/index';
 import { useEffect } from 'react';
+import {StaticList} from './components/admin/static/StaticList';
+import { OrderList } from './components/admin/order/OrderList';
+import { StaticPages } from './pages/static/index';
 
 // Helper to safely parse JSON
 const getUserFromLocalStorage = () => {
@@ -116,6 +119,9 @@ const App = () => {
                             <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
                             <Route path="/admin/carts" element={<AdminRoute element={<CartList />} />} />
                             <Route path="/admin/wishlists" element={<AdminRoute element={<WishlistList />} />} />
+                            <Route path="/admin/static" element={<AdminRoute element={<StaticList />} />} />
+                            <Route path="/admin/orders" element={<AdminRoute element={<OrderList />} />} />
+
                           </>
                         )}
                         {/* Public/User routes */}
@@ -133,6 +139,7 @@ const App = () => {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/products" element={<ProductsPage />} />
                         <Route path="/products/:id" element={<ProductDetailPage />} />
+                        <Route path="/static/:id" element={<StaticPages />} />
                         <Route path="/wishlist" element={<WishlistPage />} />
                         <Route path="/account" element={<AccountPage />} />
                         <Route path="/cart" element={<CartPage />} />

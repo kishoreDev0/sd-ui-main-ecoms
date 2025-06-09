@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, ShoppingCart, Heart, Users, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Plus, Eye, AlertTriangle } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, Heart, Users, ArrowUpRight, ArrowDownRight, Plus, Eye, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch, useAppSelector } from '@/store';
 import { RootState } from '@/store/reducer';

@@ -20,6 +20,10 @@ export enum Contact{
     CONTACT = '/contact',
     CONTACTS = '/contacts',
 }
+export enum Static{
+    STATIC = '/static',
+    STATICS = '/statics',
+}
 
 export enum Cart{
     CART = '/cart',
