@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { store } from '@/store'; // Import your Redux store directly
+import { store } from '@/store'; // Redux store
+import { toast } from 'react-toastify'; // Or use your custom snackbar
 
-// Create the axios instance
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL, // Set your backend URL
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -11,13 +11,11 @@ export const axiosInstance = axios.create({
 });
 
 // Request Interceptor
-// Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     const state = store.getState();
     const tokenmain = localStorage.getItem('token');
 
-    // Extract and parse user object from localStorage
     const userString = localStorage.getItem('user');
     let userId = '';
     if (userString) {
@@ -39,6 +37,22 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// ✅ Response Interceptor
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const { response } = error;
+
+    if (response?.status === 401 || response?.status === 403) {
+      // Clear session
+      localStorage.clear();
+
+    }
+
     return Promise.reject(error);
   }
 );

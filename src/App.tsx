@@ -1,107 +1,10 @@
-// import {
-//   Routes,
-//   Route,
-//   BrowserRouter,
-//   // Navigate,
-// } from 'react-router-dom';
-// import { Provider } from 'react-redux';
-// import store from './store';
-// import Login from './components/login';
-// import RegistrationForm from './components/register-form';
-// import ForgotPassword from './components/forgot-password';
-// import './App.css';
-// import ChangePassword from './components/change-password';
-// import Dashboard from './pages/dashboard';
-// import { AuthProvider } from './components/login/authState';
-// import PrivateRoute from './axios-setup/private-route';
-// import GoogleAuthSuccess from './components/login/googleSignIn';
-// import GitHubAuthSuccess from './components/login/githubSignIn';
-// import Loader from './components/loader/loader';
-// import CartPage from './pages/cart/CartPage';
-// import NotFound from './pages/notfound/NotFound';
-// import WishlistPage from './pages/product/WishlistPage';
-// import ProductDetailPage from './pages/product/ProductDetailPage';
-// import ProductsPage from './pages/product/ProductsPage';
-// import HomePage from './pages/home/HomePage';
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { ChatbotProvider } from './context/ChatbotContext';
-// import { WishlistProvider } from './context/WishlistContext';
-// import { ShoppingCartProvider } from './context/ShoppingCartContext';
-// import { TooltipProvider } from './components/ui/tooltip';
-// import { Navigation } from './components/Navigation';
-// import { Chatbot } from './components/chatbot/Chatbot';
-// import { Footer } from './components/Footer';
-// // import Navbar from './components/navbar';
-// import { AdminLogin } from './components/admin/Auth/AdminLogin';
-
-
-// const queryClient = new QueryClient();
-
-
-// const App = () => {
-//   const location = window.location.pathname;
-//   const isLoginPage = location === '/admin';
-//   return (
-//     <Provider store={store}>
-//        <QueryClientProvider client={queryClient}>
-//           <TooltipProvider>
-//             <ShoppingCartProvider>
-//               <WishlistProvider>
-//                 <ChatbotProvider>
-//                   <BrowserRouter>
-//                    <AuthProvider>
-//                        { isLoginPage ? <Navigation /> : <></>}
-//                         {/* <Navbar/> */}
-//                         <Routes>
-//                           <Route path="/login" element={<Login />} />
-//                           <Route path="/registerform" element={<RegistrationForm />} />
-//                           <Route path="/loader" element={<Loader />} />
-//                           <Route path="/forgotpassword" element={<ForgotPassword />} />
-//                           <Route path="/change" element={<ChangePassword />} />
-//                           <Route
-//                             path="/dashboard"
-//                             element={<PrivateRoute element={<Dashboard />} />}
-//                           />
-//                           <Route
-//                             path="/google-auth-success"
-//                             element={<GoogleAuthSuccess />}
-//                           />
-//                           <Route
-//                             path="/github-auth-success"
-//                             element={<GitHubAuthSuccess />}
-//                           />
-//                         {/* <Route path="*" element={<Navigate to="/login" />} />  */}
-//                           <Route path="/" element={<HomePage />} />
-//                           <Route path="/products" element={<ProductsPage />} />
-//                           <Route path="/products/:id" element={<ProductDetailPage />} />
-//                           <Route path="/wishlist" element={<WishlistPage />} />
-//                           <Route path="/cart" element={<CartPage />} />
-//                           <Route path="*" element={<NotFound />} />
-//                           <Route path="/admin/login" element={<AdminLogin />} />
-//                         </Routes>
-//                         <Footer />
-//                         <Chatbot />
-//                     </AuthProvider>
-//                   </BrowserRouter>
-//                 </ChatbotProvider>
-//               </WishlistProvider>
-//             </ShoppingCartProvider>
-//           </TooltipProvider>
-//         </QueryClientProvider>
-//     </Provider>
-//   );
-// };
-
-// export default App;
-
-
 import {
   Routes,
   Route,
   BrowserRouter,
   useLocation,
 } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import store from './store';
 import './App.css';
 import { AdminHeader } from './components/layouts/AdminHeader';
@@ -116,7 +19,7 @@ import GitHubAuthSuccess from './components/login/githubSignIn';
 import Loader from './components/loader/loader';
 import CartPage from './pages/cart/CartPage';
 import NotFound from './pages/notfound/NotFound';
-import WishlistPage from './pages/product/WishlistPage';
+import WishlistPage from './pages/wishlist/WishlistPage';
 import ProductDetailPage from './pages/product/ProductDetailPage';
 import ProductsPage from './pages/product/ProductsPage';
 import HomePage from './pages/home/HomePage';
@@ -125,34 +28,60 @@ import { FeatureList } from './components/admin/feature/FeatureList';
 import { Navigation } from './components/navbar/Navigation';
 import { Footer } from './components/Footer';
 import { Chatbot } from './components/chatbot/Chatbot';
-import  {DashboardOverview}  from './components/admin/Dashboard/DashboardOverview';  
+import { DashboardOverview } from './components/admin/Dashboard/DashboardOverview';
 import { AuthProvider } from './components/login/authState';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChatbotProvider } from './context/ChatbotContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { ShoppingCartProvider } from './context/ShoppingCartContext';
 import { TooltipProvider } from './components/ui/tooltip';
-import  {ProductsList}  from './components/admin/Products/ProductsList';
-import  {ToastContainer}  from 'react-toastify';
+import { ProductsList } from './components/admin/Products/ProductsList';
+import { ToastContainer } from 'react-toastify';
 import AdminRoute from './route/AdminRoute';
 import { CategoryList } from './components/admin/category/CategoryList';
 import { CartList } from './components/admin/Carts/CartsList';
 import { WishlistList } from './components/admin/Wishlists/WishlistsList';
+import AccountPage from './pages/ui/AccountPage';
+import ContactUs from './pages/contactUs/index';
+import { useEffect } from 'react';
+import {StaticList} from './components/admin/static/StaticList';
+import { OrderList } from './components/admin/order/OrderList';
+import { StaticPages } from './pages/static/index';
+
+// Helper to safely parse JSON
+const getUserFromLocalStorage = () => {
+  const raw = localStorage.getItem('user');
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error("Invalid JSON in localStorage:", e);
+    return null;
+  }
+};
 
 // Component to wrap routes and apply conditional layout
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
-  const userAdmin = JSON.parse(localStorage.getItem('user')|| '');
-  const flag = userAdmin?.role?.id === 1  
+  const dispatch = useDispatch();
+  const pathname = location.pathname;
+  const isAdminLogin = pathname === '/admin/login';
+  const isAdminRoute = pathname.startsWith('/admin');
+  const userAdmin = getUserFromLocalStorage();
+  const isAdmin = userAdmin?.role?.id === 1;
+
+  // Don't show any layout for admin login
+  if (isAdminLogin) return <>{children}</>;
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, [dispatch,pathname]);
 
   return (
     <>
-      {/* {!isAdminRoute ? <Navigation /> : <AdminHeader />} */}
-      {!isAdminRoute || !flag ? (
-        <Navigation /> // Show main Navigation if it's not an admin route or not Super User
+      {!isAdminRoute || !isAdmin ? (
+        <Navigation />
       ) : (
-        <AdminHeader /> // Show AdminHeader for Admin routes and Super User role
+        <AdminHeader />
       )}
       {children}
       {!isAdminRoute && <Footer />}
@@ -161,11 +90,13 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+
 const queryClient = new QueryClient();
 
 const App = () => {
-  const userAdmin = JSON.parse(localStorage.getItem('user')|| '');
-  const flag = userAdmin?.role?.id === 1   
+  const userAdmin = getUserFromLocalStorage();
+  const flag = userAdmin?.role?.id === 1 || false;
+
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -175,23 +106,24 @@ const App = () => {
               <ChatbotProvider>
                 <BrowserRouter>
                   <AuthProvider>
-                    <ToastContainer/>
+                    <ToastContainer />
                     <LayoutWrapper>
                       <Routes>
                         {/* Admin routes */}
                         <Route path="/admin/login" element={<AdminLogin />} />
-                         {flag && (
-                            <>
-                              <Route path="/admin/dashboard" element={<AdminRoute element={<DashboardOverview />} />} />
-                              <Route path="/admin/products" element={<AdminRoute element={<ProductsList />} />} />
-                              <Route path="/admin/features" element={<AdminRoute element={<FeatureList />} />} />
-                              <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
-                              <Route path="/admin/carts" element={<AdminRoute element={<CartList />} />} />
-                              <Route path="/admin/wishlists" element={<AdminRoute element={<WishlistList />} />} />
-                            </>
-                          )}
+                        {flag && (
+                          <>
+                            <Route path="/admin/dashboard" element={<AdminRoute element={<DashboardOverview />} />} />
+                            <Route path="/admin/products" element={<AdminRoute element={<ProductsList />} />} />
+                            <Route path="/admin/features" element={<AdminRoute element={<FeatureList />} />} />
+                            <Route path="/admin/categories" element={<AdminRoute element={<CategoryList />} />} />
+                            <Route path="/admin/carts" element={<AdminRoute element={<CartList />} />} />
+                            <Route path="/admin/wishlists" element={<AdminRoute element={<WishlistList />} />} />
+                            <Route path="/admin/static" element={<AdminRoute element={<StaticList />} />} />
+                            <Route path="/admin/orders" element={<AdminRoute element={<OrderList />} />} />
 
-
+                          </>
+                        )}
                         {/* Public/User routes */}
                         <Route path="/login" element={<Login />} />
                         <Route path="/registerform" element={<RegistrationForm />} />
@@ -207,8 +139,11 @@ const App = () => {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/products" element={<ProductsPage />} />
                         <Route path="/products/:id" element={<ProductDetailPage />} />
+                        <Route path="/static/:id" element={<StaticPages />} />
                         <Route path="/wishlist" element={<WishlistPage />} />
+                        <Route path="/account" element={<AccountPage />} />
                         <Route path="/cart" element={<CartPage />} />
+                        <Route path="/contact-us" element={<ContactUs />} />
                         <Route path="*" element={<NotFound />} />
                       </Routes>
                     </LayoutWrapper>

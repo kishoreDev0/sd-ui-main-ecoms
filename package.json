@@ -1,5 +1,5 @@
 {
-  "name": "boiler-plate",
+  "name": "ecom",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,6 +13,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^9.5.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
@@ -48,6 +49,8 @@
     "@tailwindcss/vite": "^4.0.14",
     "@tanstack/react-query": "^5.76.1",
     "@tanstack/react-table": "^8.21.2",
+    "@tiptap/react": "^2.14.0",
+    "@tiptap/starter-kit": "^2.14.0",
     "axios": "^1.8.4",
     "boiler-plate": "file:",
     "class-variance-authority": "^0.7.1",
@@ -57,6 +60,9 @@
     "firebase": "^11.5.0",
     "formik": "^2.4.6",
     "lucide-react": "^0.482.0",
+    "primeicons": "^7.0.0",
+    "primereact": "^10.9.6",
+    "quill": "^2.0.3",
     "react": "^19.0.0",
     "react-day-picker": "^9.7.0",
     "react-dom": "^19.0.0",
@@ -66,6 +72,8 @@
     "react-router-dom": "^7.3.0",
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.3",
+    "slate": "^0.115.1",
+    "slate-react": "^0.114.2",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.14",

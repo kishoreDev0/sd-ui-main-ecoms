@@ -2,9 +2,16 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart, HeartIcon } from "lucide-react";
-import { useShoppingCart } from "@/context/ShoppingCartContext";
-import { useWishlist } from "@/context/WishlistContext";
 import { cn } from "@/lib/utils";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/store";
+import { moveWishlistlist } from "@/store/action/wishlist";
+import { RootState } from "@/store/reducer";
+import { HttpStatusCode } from "@/constants";
+import { toast } from "react-toastify";
+import { fetchCartsListbyUserId } from "@/store/action/cart";
+import { useEffect } from "react";
+import { fetchAllProducts } from "@/store/action/products";
 
 interface ProductCardProps {
   id: number;
@@ -17,26 +24,46 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ id, name, price, image, inStock = true,isWishlisted,onToggleWishlist }: ProductCardProps) {
-  
-  const { addToCart, isItemInCart } = useShoppingCart();
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  
-  const isInCart = isItemInCart(id);
-  const inWishlist = isInWishlist(id);
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useAppSelector((state:RootState)=> state.auth);
+  const { cartList } =  useAppSelector((state:RootState)=> state.cartSelector)
+  useEffect(()=>{
+    if(user?.id) dispatch(fetchCartsListbyUserId(user?.id ?? 0))
+  },[])
+  const isInCart = cartList.some((item) => Number(item) === id);
 
-  const handleAddToCart = () => {
-    if (inStock) {
-      addToCart({ id, name, price, image });
-    }
-  };
 
-  const handleWishlist = () => {
-    if (inWishlist) {
-      removeFromWishlist(id);
-    } else {
-      addToWishlist({ id, name, price, image });
-    }
-  };
+  const handleAddToCart = async (id:number) => {
+
+        if(user?.id ){
+             try {
+          console.log(id)
+          
+          const result = await dispatch(
+            moveWishlistlist({
+              id: user?.id ?? 0,
+              payload: {
+                productId: id,
+                updatedBy: user?.id ?? 0,
+              },
+            })
+          ).unwrap();
+          if (result.statusCode === HttpStatusCode.OK) {
+            toast.success(result?.message ?? "Product moved to cart successfully");
+            dispatch(fetchCartsListbyUserId(user?.id ?? 0))
+            dispatch(fetchAllProducts())
+          } else {
+            toast.error(result?.message ?? "Product has not moved to cart");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        }
+        else{
+          toast.info("Please login first")
+        }
+       
+      };
 
   return (
     <div className="group relative overflow-hidden bg-white">
@@ -44,12 +71,12 @@ export function ProductCard({ id, name, price, image, inStock = true,isWishliste
        <button
         onClick={(e) => onToggleWishlist(e,id)}
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        className="absolute top-2 right-2 p-1 z-99 cursor-pointer"
+        className="absolute top-2  right-2 p-1 z-9 cursor-pointer"
       >
         {isWishlisted ? (
-          <HeartIcon fill="currentColor" className="text-black-600 w-6 h-6" />
+          <HeartIcon fill="currentColor" className="text-black-600 z-0 w-6 h-6" />
         ) : (
-          <Heart className="text-gray-400 w-6 h-6 hover:text-red-600" />
+          <Heart className="text-gray-400 w-6 h-6 hover:text-blue-600 z-0" />
         )}
         
       </button>
@@ -74,13 +101,13 @@ export function ProductCard({ id, name, price, image, inStock = true,isWishliste
         
         <div className="flex justify-between items-center">
           <Button
-            variant={inStock ? (isInCart ? "outline" : "default") : "outline"}
+           
             className={cn(
               "w-full font-medium",
               !inStock && "text-muted-foreground cursor-not-allowed"
             )}
             disabled={!inStock}
-            onClick={handleAddToCart}
+            onClick={(e) => handleAddToCart(id)}
           >
             {!inStock ? "Out of Stock" : isInCart ? "Added to Cart" : "Add to Cart"}
           </Button>
@@ -89,3 +116,6 @@ export function ProductCard({ id, name, price, image, inStock = true,isWishliste
     </div>
   );
 }
+
+
+

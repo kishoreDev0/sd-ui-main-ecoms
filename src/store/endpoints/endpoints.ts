@@ -16,6 +16,14 @@ export enum Category{
     CATEGORY = '/category',
     CATEGORYS = '/categories',
 }
+export enum Contact{
+    CONTACT = '/contact',
+    CONTACTS = '/contacts',
+}
+export enum Static{
+    STATIC = '/static',
+    STATICS = '/statics',
+}
 
 export enum Cart{
     CART = '/cart',
@@ -37,5 +45,6 @@ export enum Wishlist{
 export enum Order{
     ORDER = '/order',
     ORDERS = '/orders',
-    LIST = '/list'
+    LIST = '/list',
+    SUBSCRIBE = '/subscribe',
 }

@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, ShoppingCart, Heart, Users, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Plus, Eye, AlertTriangle } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, Heart, Users, ArrowUpRight, ArrowDownRight, Plus, Eye, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch, useAppSelector } from '@/store';
 import { RootState } from '@/store/reducer';
@@ -36,7 +36,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon: Icon, t
                 ) : (
                   <ArrowDownRight className="h-3 w-3 text-red-500 mr-1" />
                 )}
-                <span className={trend === "up" ? "text-green-600" : "text-red-600"}>{change}</span>
+                <span className={trend === "up" ? "text-green-600" : "text-blue-600"}>{change}</span>
                 {/* <span className="ml-1">{description}</span> */}
               </div>
             </CardContent>

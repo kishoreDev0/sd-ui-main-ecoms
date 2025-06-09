@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { OrderAPI } from '../service/order';
-import { CreateOrderPayload, UpdateOrderPayload } from '../types/order';
+import { CreateOrderPayload, OrderSubscribe, UpdateOrderPayload } from '../types/order';
 
 const orderApi = new OrderAPI();
 
@@ -53,6 +53,20 @@ export const deleteOrder = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Failed to delete Order'
+      );
+    }
+  }
+);
+
+export const subscribeOrder = createAsyncThunk(
+  'Orders/deleteOrder',
+  async ({ id, payload }:{ id: number; payload: OrderSubscribe }, { rejectWithValue }) => {
+    try {
+      const response = await orderApi.subscribeOrder(id,payload);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Failed to send email for subscribe'
       );
     }
   }

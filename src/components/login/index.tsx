@@ -24,7 +24,7 @@ const Login: React.FC<LoginProps> = ({ logoSrc, logoAlt = 'Company Logo' }) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/');
     }
     dispatch(clearError());
   }, [isAuthenticated, navigate, dispatch]);
@@ -73,7 +73,7 @@ const Login: React.FC<LoginProps> = ({ logoSrc, logoAlt = 'Company Logo' }) => {
         if (values.rememberMe) {
           localStorage.setItem('rememberMe', 'true');
         }
-        navigate('/dashboard');
+        navigate('/');
       }
     } catch (err) {
       console.error('Login failed', err);
